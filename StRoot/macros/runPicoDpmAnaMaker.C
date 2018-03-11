@@ -181,7 +181,7 @@ void runPicoDpmAnaMaker(const Char_t *inputFile="test.list", const Char_t *outpu
   hfCuts->setCutRequireHFT(true);
 
 	hfCuts->setCutDca(1.5); //for QA, see createQA() in StPicoDpmAnaMaker.cxx
-	hfCuts->setCutDcaXy(1.);
+	hfCuts->setCutDcaXy(1.); //used in Kvapil's version, not used in Vanek's version
 	hfCuts->setCutDcaZ(1.);
 
   hfCuts->setCutDcaMin(0.009,StHFCuts::kPion); //federic 1aug2016
@@ -245,7 +245,7 @@ void runPicoDpmAnaMaker(const Char_t *inputFile="test.list", const Char_t *outpu
 //  cout<<"test"<<endl;
   StRefMultCorr* grefmultCorrUtil = CentralityMaker::instance()->getgRefMultCorr_P16id(); //new StRefMultCorr, info about Run16, SL16j in the same file as for Run14, SL16d
   picoDpmAnaMaker->setRefMutCorr(grefmultCorrUtil);
-//  cout<<"test2"<<endl;
+  //cout<<"test2"<<endl;
   // ========================================================================================
 
   // ========================================================================================

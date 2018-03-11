@@ -28,14 +28,15 @@ int StPicoDpmAnaMaker::InitHF() {
 
   // EXAMPLE //  mOutList->Add(new TH1F(...));
   // EXAMPLE //  TH1F* hist = static_cast<TH1F*>(mOutList->Last());
-
+    cout<<"InitHF1"<<endl;
 	  mOutFileBaseName = mOutFileBaseName.ReplaceAll(".root", "");
 	  histoInit(mOutFileBaseName, true); //for createQA()
-
+    cout<<"InitHF2"<<endl;
 //	cout<<"RefMult1"<<endl;
 		mRefmultCorrUtil->setVzForWeight(6, -6.0, 6.0);
+    cout<<"RefMult1"<<endl;
     mRefmultCorrUtil->readScaleForWeight("StRoot/StRefMultCorr/macros/weight_grefmult_VpdnoVtx_Vpd5_Run16.txt"); //for new StRefMultCorr, Run16, SL16j
-//	cout<<"RefMult2"<<endl;
+  	cout<<"RefMult2"<<endl;
 
    // -------------- USER VARIABLES -------------------------
 
@@ -155,7 +156,13 @@ int StPicoDpmAnaMaker::createQA(){
              //std::cout<<"1: "<<goodPion<<" "<< goodKaon<<" "<<  goodProton<<" "<<  momentum.perp()<<" "<<  centrality<<" "<<  momentum.pseudoRapidity()<<" "<<  momentum.phi()<<" "<<  mPrimVtx.z()<<std::endl;
              addTpcDenom1(goodPion, goodKaon, goodProton, momentum.perp(), centrality, momentum.pseudoRapidity(), momentum.phi(), mPrimVtx.z()); //Dca cut on 1.5cm, add Tpc Denominator
           }
+/* old, Kvapil
           if (trk && fabs(dca) < mHFCuts->cutDca() && trk->isHFTTrack() && (goodPion || goodKaon || goodProton) && fabs(dcaXy) < mHFCuts->cutDcaXy() && fabs(dcaZ) < mHFCuts->cutDcaZ()){
+             addHFTNumer1(goodPion, goodKaon, goodProton, momentum.perp(), centrality,  momentum.pseudoRapidity(), momentum.phi(), mPrimVtx.z()); //Dca cut on 1.5cm, add HFT Numerator
+          }
+*/
+          //new version, Vanek 03/10/18
+          if (trk && fabs(dca) < mHFCuts->cutDca() && trk->isHFTTrack() && (goodPion || goodKaon || goodProton)){
              addHFTNumer1(goodPion, goodKaon, goodProton, momentum.perp(), centrality,  momentum.pseudoRapidity(), momentum.phi(), mPrimVtx.z()); //Dca cut on 1.5cm, add HFT Numerator
           }
        } // .. end tracks loop
