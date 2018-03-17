@@ -136,7 +136,7 @@ int StPicoDpmAnaMaker::createQA(){
           //float hBeta = mHFCuts->getTofBetaBase(trk); //SL16d
 		  		float hBeta = mHFCuts->getTofBetaBase(trk, mPicoDst->event()->bField()); //SL16j, Vanek
           bool hTofAvailable = !isnan(hBeta) && hBeta > 0;
-
+/*
           bool tofPion = false;
           bool tofKaon = false;
           bool tofProton = false;
@@ -148,6 +148,10 @@ int StPicoDpmAnaMaker::createQA(){
           bool goodPion = (hTofAvailable && tofPion && tpcPion) || (!hTofAvailable && tpcPion);//Always require TPC
           bool goodKaon = (hTofAvailable && tofKaon && tpcKaon) || (!hTofAvailable && tpcKaon);
           bool goodProton = (hTofAvailable && tofProton && tpcProton) || (!hTofAvailable && tpcProton);
+*/
+          bool goodPion = tpcPion; //do not want TOF for HFT matching and resolution determination
+          bool goodKaon = tpcKaon;
+          bool goodProton = tpcProton;
 
           if (trk  && fabs(dca) < mHFCuts->cutDca() && trk->isHFTTrack() && (goodPion || goodKaon || goodProton)){
              addDcaPtCent(dca, dcaXy, dcaZ, goodPion, goodKaon, goodProton, momentum.perp(), centrality, momentum.pseudoRapidity(), momentum.phi(), mPrimVtx.z()); //add Dca distribution
