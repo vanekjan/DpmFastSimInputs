@@ -20,10 +20,6 @@
 #include "StHFPair.h"
 #include "StHFTriplet.h"
 
-#include <iostream>
-
-using namespace std;
-
 ClassImp(StPicoHFMaker)
 
 // _________________________________________________________
@@ -62,7 +58,7 @@ Int_t StPicoHFMaker::Init() {
 
   // -- create HF event - using the proper decay mode to initialize
   mPicoHFEvent = new StPicoHFEvent(mDecayMode);
-
+ 
   // -- READ ------------------------------------
   if (mMakerMode == StPicoHFMaker::kRead) {
 
@@ -70,11 +66,11 @@ Int_t StPicoHFMaker::Init() {
       mHFChain = new TChain("T");
       std::ifstream listOfFiles(mInputFileName.Data());
       if (listOfFiles.is_open()) {
-	      std::string file;
-	      while (getline(listOfFiles, file)) {
-	        LOG_INFO << " StPicoHFMaker - Adding :" << file << endm;
-	        mHFChain->Add(file.c_str());
-	      }
+	std::string file;
+	while (getline(listOfFiles, file)) {
+	  LOG_INFO << " StPicoHFMaker - Adding :" << file << endm;
+	  mHFChain->Add(file.c_str());
+	}
       }
       else { 
 	LOG_ERROR << " StPicoHFMaker - Could not open list of files. ABORT!" << endm;
@@ -85,7 +81,7 @@ Int_t StPicoHFMaker::Init() {
     mHFChain->GetBranch("hfEvent")->SetAutoDelete(kFALSE);
     mHFChain->SetBranchAddress("hfEvent", &mPicoHFEvent);
   }
-
+  
   // -- file which holds list of histograms
   mOutputFileList = new TFile(Form("%s.%s.root", mOutputFileBaseName.Data(), GetName()), "RECREATE");
   mOutputFileList->SetCompressionLevel(1);
@@ -148,7 +144,7 @@ Int_t StPicoHFMaker::Finish() {
   
   // -- call method of daughter class
   FinishHF();
-
+  
   mOutputFileList->Close();
 
   return kStOK;

@@ -64,9 +64,9 @@ class StHFPair : public TObject
   float decayLength() const;
   float decayLength(StThreeVectorF const & vtx2) const;
   float particle1Dca() const;
-  float particle1Dca(StPicoTrack const * p1track, StThreeVectorF const & vtx2) const;
+  float particle1Dca(StPicoTrack const * p1track, StThreeVectorF const & vtx2, float bField) const;
   float particle2Dca() const;
-  float particle2Dca(StPicoTrack const * p1track, StThreeVectorF const & vtx2) const;
+  float particle2Dca(StPicoTrack const * p1track, StThreeVectorF const & vtx2, float bField) const;
   unsigned short particle1Idx() const;
   unsigned short particle2Idx() const;
   float dcaDaughters() const;
