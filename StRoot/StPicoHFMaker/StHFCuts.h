@@ -84,10 +84,6 @@ class StHFCuts : public StPicoCutsBase
 	void setCutEta(float eta) { mEta = eta; }
 	void setCutTPCNSigmaHadronHist(float nSigHadr, int hadrFlag);
 	void setCutTripletdV0Max(float dV0MaxSetCut) {mdV0MaxCut = dV0MaxSetCut;}
-
-	void setCutDca(float dca) { mDcaQA = dca; }
-	void setCutDcaXy(float dcaXy) { mDcaXyQA = dcaXy; }
-	void setCutDcaZ(float dcaZ) { mDcaZQA = dcaZ; }
 //--------------------------------------------------------------------------------------------------------
 
   // -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- --   
@@ -121,12 +117,7 @@ class StHFCuts : public StPicoCutsBase
 
 //----MY GETTERS------------------------------------------------------------------------------------------
 
-	const float&		cutEta() const;
-	const float&		cutPt() const;
-
-	const float&		cutDca() const;
-	const float&		cutDcaXy() const;
-	const float&		cutDcaZ() const;
+	
 //--------------------------------------------------------------------------------------------------------
 
  private:
@@ -146,10 +137,6 @@ class StHFCuts : public StPicoCutsBase
 	float mdV0MaxCut;
 
 	float mPtQA;
-
-	float mDcaQA;
-	float mDcaXyQA;
-	float mDcaZQA;
 
 	//---------------------------------------
 
@@ -246,13 +233,5 @@ inline const float&    StHFCuts::cutSecondaryTripletDecayLengthMax()     const {
 inline const float&    StHFCuts::cutSecondaryTripletCosThetaMin()        const { return mSecondaryTripletCosThetaMin; }
 inline const float&    StHFCuts::cutSecondaryTripletMassMin()            const { return mSecondaryTripletMassMin; }
 inline const float&    StHFCuts::cutSecondaryTripletMassMax()            const { return mSecondaryTripletMassMax; }
-
-inline const float&		 StHFCuts::cutEta()		const { return mEta; }
-inline const float&		 StHFCuts::cutPt()		const { return mPtQA; }
-
-inline const float&		 StHFCuts::cutDca()		const { return mDcaQA; }
-inline const float&		 StHFCuts::cutDcaXy() const { return mDcaXyQA; }
-inline const float&		 StHFCuts::cutDcaZ()	const { return mDcaZQA; }
-
 
 #endif

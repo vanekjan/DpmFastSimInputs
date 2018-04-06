@@ -149,7 +149,7 @@ int StPicoDpmAnaMaker::createQA(){
           bool goodKaon = (hTofAvailable && tofKaon && tpcKaon) || (!hTofAvailable && tpcKaon);
           bool goodProton = (hTofAvailable && tofProton && tpcProton) || (!hTofAvailable && tpcProton);
 */
-          bool goodPion = tpcPion; //do not want TOF for HFT matching and resolution determination
+          bool goodPion = tpcPion; //do not want TOF for HFT matching and resolution determination, Vanek 03/17/18
           bool goodKaon = tpcKaon;
           bool goodProton = tpcProton;
 

@@ -50,7 +50,7 @@ StHFPair::StHFPair(StPicoTrack const * const particle1, StPicoTrack const * cons
   StPhysicalHelixD p2Helix = particle2->dcaGeometry().helix();
 */
 	StPhysicalHelixD p1Helix = particle1->helix(bField); //SL16j, Vanek
-  StPhysicalHelixD p2Helix = particle2->helix(bField);
+  StPhysicalHelixD p2Helix = particle2->helix(bField); //bFiled not in kilogauss - is properly computed inside helix(double B) function in StPicoTrack.h
 
   // -- move origins of helices to the primary vertex origin
   p1Helix.moveOrigin(p1Helix.pathLength(vtx));
@@ -188,23 +188,23 @@ float StHFPair::decayLength(StThreeVectorF const & vtx2) const{
   return nDecayLength;
 }
 // _________________________________________________________
-float StHFPair::particle1Dca(StPicoTrack const * p1track, StThreeVectorF const & vtx2) const{
-/*  // -- Overloaded function recalculates daughter dca 2 updated vertex //SL16d
+float StHFPair::particle1Dca(StPicoTrack const * p1track, StThreeVectorF const & vtx2, float bField) const{
+  // -- Overloaded function recalculates daughter dca 2 updated vertex
   StPhysicalHelixD p1Helix = p1track->helix(bField);
   // -- move origins of helices to the primary vertex origin
   p1Helix.moveOrigin(p1Helix.pathLength(vtx2));
-*/
-  float const nParticle1Dca = (p1track->origin() - vtx2).mag(); //SL16j, Vanek
+
+  float const nParticle1Dca = (p1Helix.origin() - vtx2).mag();
   return nParticle1Dca;
 }
 // _________________________________________________________
-float StHFPair::particle2Dca(StPicoTrack const * p2track, StThreeVectorF const & vtx2) const{
-/*  // -- Overloaded function recalculates daughter dca 2 updated vertex //SL16d
+float StHFPair::particle2Dca(StPicoTrack const * p2track, StThreeVectorF const & vtx2, float bField) const{
+  // -- Overloaded function recalculates daughter dca 2 updated vertex
   StPhysicalHelixD p2Helix = p2track->helix(bField);
   // -- move origins of helices to the primary vertex origin
   p2Helix.moveOrigin(p2Helix.pathLength(vtx2));
-*/
-  float const nParticle2Dca = (p2track->origin() - vtx2).mag(); //SL16j, Vanek
+
+  float const nParticle2Dca = (p2Helix.origin()  - vtx2).mag();
   return nParticle2Dca;
 }
 
