@@ -55,6 +55,11 @@ class StHFCuts : public StPicoCutsBase
 	bool hasGoodTripletdV0Max(StHFTriplet const &triplet) const;
 	bool hasGoodPtQA(StPicoTrack const *track) const;
 
+  bool hasGoodPiInvMass(StLorentzVectorF const &PiPairLorentzVector) const;
+  bool hasGoodKInvMass(StLorentzVectorF const &KPairLorentzVector) const;
+
+  bool hasGoodPtRangeQA(StPicoTrack const *track) const;
+
 
 //--------------------------------------------------------------------------
 
@@ -78,12 +83,23 @@ class StHFCuts : public StPicoCutsBase
 
 	void setCutPtQA(float PtQA) { mPtQA = PtQA; }
 
+  void setCutPiPairInvMassInterval(float PiInvMassLow, float PiInvMassUp);
+  void setCutKPairInvMassInterval(float KInvMassLow, float KInvMassUp);
+
+  void setHFTinputsOrPIDefficiency(int QA_mode) {mQA_mode = QA_mode;}
 //----MY SETTERS------------------------------------------------------------------------------------------
 
 	void setCutNHitsFitMinHist(int i) {mNHitsFitMinHist = i;}
 	void setCutEta(float eta) { mEta = eta; }
 	void setCutTPCNSigmaHadronHist(float nSigHadr, int hadrFlag);
 	void setCutTripletdV0Max(float dV0MaxSetCut) {mdV0MaxCut = dV0MaxSetCut;}
+
+  
+  void setCutDca(float dca) { mDcaQA = dca; }
+  void setCutDcaXy(float dcaXy) { mDcaXyQA = dcaXy; }
+  void setCutDcaZ(float dcaZ) { mDcaZQA = dcaZ; }
+
+  void setCutPtRangeQA(float Ptmin, float Ptmax) {mPtmin = Ptmin; mPtmax = Ptmax;}
 //--------------------------------------------------------------------------------------------------------
 
   // -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- --   
@@ -117,6 +133,14 @@ class StHFCuts : public StPicoCutsBase
 
 //----MY GETTERS------------------------------------------------------------------------------------------
 
+  const float&		cutEta() const;
+  const float&		cutPt() const;
+
+  const float&		cutDca() const;
+  const float&		cutDcaXy() const;
+  const float&		cutDcaZ() const;
+
+  const int&      HFTinputsOrPIDefficiency() const;
 	
 //--------------------------------------------------------------------------------------------------------
 
@@ -137,6 +161,17 @@ class StHFCuts : public StPicoCutsBase
 	float mdV0MaxCut;
 
 	float mPtQA;
+
+  float mDcaQA;
+  float mDcaXyQA;
+  float mDcaZQA;
+
+  float mPiInvMassLow, mPiInvMassUp;
+  float mKInvMassLow, mKInvMassUp;
+
+  int mQA_mode;
+
+  float mPtmax, mPtmin;
 
 	//---------------------------------------
 
@@ -233,5 +268,14 @@ inline const float&    StHFCuts::cutSecondaryTripletDecayLengthMax()     const {
 inline const float&    StHFCuts::cutSecondaryTripletCosThetaMin()        const { return mSecondaryTripletCosThetaMin; }
 inline const float&    StHFCuts::cutSecondaryTripletMassMin()            const { return mSecondaryTripletMassMin; }
 inline const float&    StHFCuts::cutSecondaryTripletMassMax()            const { return mSecondaryTripletMassMax; }
+
+inline const float&		 StHFCuts::cutEta()		const { return mEta; }
+inline const float&		 StHFCuts::cutPt()		const { return mPtQA; }
+
+inline const float&		 StHFCuts::cutDca()		const { return mDcaQA; }
+inline const float&		 StHFCuts::cutDcaXy() const { return mDcaXyQA; }
+inline const float&		 StHFCuts::cutDcaZ()	const { return mDcaZQA; }
+
+inline const int&      StHFCuts::HFTinputsOrPIDefficiency() const {return mQA_mode;}
 
 #endif

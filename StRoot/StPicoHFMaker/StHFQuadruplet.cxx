@@ -97,34 +97,23 @@ StHFQuadruplet::StHFQuadruplet(StPicoTrack const * const particle1, StPicoTrack 
   StPhysicalHelixD p2Helix = particle2->helix(bField);
   StPhysicalHelixD p3Helix = particle3->helix(bField);
   StPhysicalHelixD p4Helix = particle4->helix(bField);
-  
-  StThreeVectorF const p1Mom = particle1->gMom(vtx, bField); //momentum at pVtx
-  StThreeVectorF const p2Mom = particle2->gMom(vtx, bField); //bFiled NOT in kilogauss - properly computed inside helix(double) function in StPicoTrack
-  StThreeVectorF const p3Mom = particle3->gMom(vtx, bField);
-  StThreeVectorF const p4Mom = particle4->gMom(vtx, bField);
 
-  // -- move origins of helices to the primary vertex origin
+  // -- move origins of helices to the primary vertex origin - neede later in the code
   p1Helix.moveOrigin(p1Helix.pathLength(vtx));
   p2Helix.moveOrigin(p2Helix.pathLength(vtx));
   p3Helix.moveOrigin(p3Helix.pathLength(vtx));
   p4Helix.moveOrigin(p4Helix.pathLength(vtx));
-
-  StPhysicalHelixD const p1StraightLine(p1Mom, p1Helix.origin(), 0, particle1->charge());
-  StPhysicalHelixD const p2StraightLine(p2Mom, p2Helix.origin(), 0, particle2->charge());
-  StPhysicalHelixD const p3StraightLine(p3Mom, p3Helix.origin(), 0, particle3->charge());
-  StPhysicalHelixD const p4StraightLine(p4Mom, p4Helix.origin(), 0, particle4->charge());
-  
-/* original version, Vanek SL16j
-  StThreeVectorF const p1Mom = particle1->gMom();
+    
+  StThreeVectorF const p1Mom = particle1->gMom(); //momentum at pvtx,  computed inside StPicoTrack
   StThreeVectorF const p2Mom = particle2->gMom();
   StThreeVectorF const p3Mom = particle3->gMom();
   StThreeVectorF const p4Mom = particle4->gMom();
   
-  StPhysicalHelixD const p1StraightLine(p1Mom, particle1->origin(), 0, particle1->charge());
+  StPhysicalHelixD const p1StraightLine(p1Mom, particle1->origin(), 0, particle1->charge()); //origin computed iside StPicoTrack
   StPhysicalHelixD const p2StraightLine(p2Mom, particle2->origin(), 0, particle2->charge());
   StPhysicalHelixD const p3StraightLine(p3Mom, particle3->origin(), 0, particle3->charge());
   StPhysicalHelixD const p4StraightLine(p4Mom, particle4->origin(), 0, particle4->charge());
-*/
+
 //-----------------------------------------------------------------------------------------
 
   pair<double, double> const ss12 = p1StraightLine.pathLengths(p2StraightLine);
@@ -272,20 +261,27 @@ StHFQuadruplet::StHFQuadruplet(StPicoTrack const * const particle1, StPicoTrack 
 	// -- use straight lines approximation to get point of DCA of particle1-particle2 pair
 	//SL16j, Vanek
 	StPhysicalHelixD p1Helix = particle1->helix(bField); //used at line 326
-  StPhysicalHelixD p2Helix = particle2->helix(bField);
+  StPhysicalHelixD p2Helix = particle2->helix(bField); 
   StPhysicalHelixD p3Helix = particle3->helix(bField);
 
-  StThreeVectorF const p1Mom = particle1->gMom(vtx, bField); //momentum at pVtx
-  StThreeVectorF const p2Mom = particle2->gMom(vtx, bField); //bFiled NOT in kilogauss - properly computed inside helix(double) function in StPicoTrack
-  StThreeVectorF const p3Mom = particle3->gMom(vtx, bField);
+  // -- move origins of helices to the primary vertex origin - neede later in the code
+  p1Helix.moveOrigin(p1Helix.pathLength(vtx));
+  p2Helix.moveOrigin(p2Helix.pathLength(vtx));
+  p3Helix.moveOrigin(p3Helix.pathLength(vtx));
+  // No need to move p4 to origin already defined as such
+
+  StThreeVectorF const p1Mom = particle1->gMom(); //momentum at pVtx, comuted inside StPicoTrack
+  StThreeVectorF const p2Mom = particle2->gMom(); //bFiled NOT in kilogauss - properly computed inside helix(double) function in StPicoTrack
+  StThreeVectorF const p3Mom = particle3->gMom();
   StThreeVectorF const p4Mom(particle4->px(), particle4->py(), particle4->pz());
 
-	// Build p4 helix from pair: assuming pair will always be neutral charge and origin is set to the given vtx 
+  // Build p4 helix from pair: assuming pair will always be neutral charge and origin is set to the given vtx 
   StPhysicalHelixD p4Helix(p4Mom, vtx, bField * kilogauss, 0);
   
-  StPhysicalHelixD const p1StraightLine(p1Mom, p1Helix.origin(), 0, particle1->charge());
-  StPhysicalHelixD const p2StraightLine(p2Mom, p2Helix.origin(), 0, particle2->charge());
-  StPhysicalHelixD const p3StraightLine(p3Mom, p3Helix.origin(), 0, particle3->charge());
+  StPhysicalHelixD const p1StraightLine(p1Mom, particle1->origin(), 0, particle1->charge());
+  StPhysicalHelixD const p2StraightLine(p2Mom, particle2->origin(), 0, particle2->charge());
+  StPhysicalHelixD const p3StraightLine(p3Mom, particle3->origin(), 0, particle3->charge());
+
 //-----------------------------------------------------------------------------------------
   
   pair<double, double> const ss12 = p1StraightLine.pathLengths(p2StraightLine);

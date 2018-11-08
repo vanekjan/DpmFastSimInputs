@@ -228,14 +228,14 @@ bool StPicoCutsBase::isGoodTrack(StPicoTrack const * const trk) const {
 // _________________________________________________________
 bool StPicoCutsBase::cutMinDcaToPrimVertex(StPicoTrack const * const trk, int pidFlag) const {
   // -- check on min dca for identified particle
-/* old - SL16d
-  StPhysicalHelixD helix = trk->dcaGeometry().helix();
+/*
+  StPhysicalHelixD helix = trk->dcaGeometry().helix(); //SL16d
   helix.moveOrigin(helix.pathLength(mPrimVtx));
-  float dca = (mPrimVtx - helix.origin()).mag();
-*/
 
-//new SL16j Vanek
-	float dca = (mPrimVtx - trk->origin()).mag();
+	float dca = (mPrimVtx - helix.origin()).mag();
+*/
+  //new SL16j Vanek
+  float dca = (mPrimVtx - trk->origin()).mag(); //origin computed inside StPicoTrack
 
   return (dca >= mDcaMin[pidFlag]);
 }
@@ -243,16 +243,17 @@ bool StPicoCutsBase::cutMinDcaToPrimVertex(StPicoTrack const * const trk, int pi
 // _________________________________________________________
 bool StPicoCutsBase::cutMinDcaToPrimVertexTertiary(StPicoTrack const * const trk, int pidFlag) const {
   // -- check on min dca for identified particle - used for tertiary particles only
-/* old - SL16d
-  StPhysicalHelixD helix = trk->dcaGeometry().helix();
+
+ /*
+  StPhysicalHelixD helix = trk->dcaGeometry().helix(); //SL16d
   helix.moveOrigin(helix.pathLength(mPrimVtx));
-  float dca = (mPrimVtx - helix.origin()).mag();
+
+	float dca = (mPrimVtx - helix.origin()).mag();
 */
+  //new SL16j Vanek
+  float dca = (mPrimVtx - trk->origin()).mag(); //origin computed inside StPicoTrack
 
-//new SL16j, Vanek
-	float dca = (mPrimVtx - trk->origin()).mag();
-
-  return (dca >= mDcaMinTertiary[pidFlag]);
+  return (dca >= mDcaMin[pidFlag]);
 }
 
 // =======================================================================
