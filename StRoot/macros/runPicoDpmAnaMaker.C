@@ -163,25 +163,32 @@ void runPicoDpmAnaMaker(const Char_t *inputFile="test.list", const Char_t *outpu
   hfCuts->addTriggerId(450025);    // vpdmb-5-p-nobsmd
 */
 	//SL16j triggers
-  hfCuts->addTriggerId(520802);    // VPDMB-5-p-hlt
-  hfCuts->addTriggerId(520812);    // VPDMB-5-p-hlt
-  hfCuts->addTriggerId(520822);    // VPDMB-5-p-hlt
-  hfCuts->addTriggerId(520832);    // VPDMB-5-p-hlt
-  hfCuts->addTriggerId(520842);    // VPDMB-5-p-hlt
+  //hfCuts->addTriggerId(520802);    // VPDMB-5-p-hlt
+  //hfCuts->addTriggerId(520812);    // VPDMB-5-p-hlt
+  //hfCuts->addTriggerId(520822);    // VPDMB-5-p-hlt
+  //hfCuts->addTriggerId(520832);    // VPDMB-5-p-hlt
+  //hfCuts->addTriggerId(520842);    // VPDMB-5-p-hlt
 
+/*
 	hfCuts->addTriggerId(520001);    // VPDMB-5-p-sst
   hfCuts->addTriggerId(520011);    // VPDMB-5-p-sst
   hfCuts->addTriggerId(520021);    // VPDMB-5-p-sst
   hfCuts->addTriggerId(520031);    // VPDMB-5-p-sst
   hfCuts->addTriggerId(520041);    // VPDMB-5-p-sst
   hfCuts->addTriggerId(520051);    // VPDMB-5-p-sst
+*/
+  hfCuts->addTriggerId(570002);    // VPDMB-5-nosst (production 2, nosst stream)
+  hfCuts->addTriggerId(570001);    // VPDMB-5-sst (production 2, sst stream )
+
+  hfCuts->setHFTinputsOrPIDefficiency(0); //0 - HFT inputs; 1 - PID efficiency; 2 - tracking efficiency sys. err.
 
   hfCuts->setCutNHitsFitMin(15); //kvapil 20 to 15, for candidates
 	hfCuts->setCutNHitsFitMinHist(20); //for histograms, Vanek
   hfCuts->setCutRequireHFT(true);
-
+  
+  //check all cuts in StHFCuts after HFMaker update - see GitHub for reference
 	hfCuts->setCutDca(1.5); //for QA, see createQA() in StPicoDpmAnaMaker.cxx
-	hfCuts->setCutDcaXy(1.); //used in Kvapil's version, not used in Vanek's version
+	hfCuts->setCutDcaXy(1.);
 	hfCuts->setCutDcaZ(1.);
 
   hfCuts->setCutDcaMin(0.009,StHFCuts::kPion); //federic 1aug2016
@@ -228,6 +235,7 @@ void runPicoDpmAnaMaker(const Char_t *inputFile="test.list", const Char_t *outpu
   hfCuts->setCutPtRange(0.3,50.0,StHFCuts::kKaon); //changed to 0.3
 
 	hfCuts->setCutPtQA(0.3); //p_T used in createQA() in StPicoDpmAnaMaker.cxx
+  hfCuts->setCutPtRangeQA(0.5, 4.0); //pT range for PID efficiency
   //TPC setters
   hfCuts->setCutTPCNSigmaPion(1.0); //possibly close as possible, e.g. 1.0
   hfCuts->setCutTPCNSigmaKaon(1.0); //all changed to 1.0
@@ -240,6 +248,12 @@ void runPicoDpmAnaMaker(const Char_t *inputFile="test.list", const Char_t *outpu
   hfCuts->setCutPtotRangeHybridTOF(0.3,50.0,StHFCuts::kKaon); //changed lower boundary from 0.5 to 0.3 (same cut as used in analysis)
   hfCuts->setCutTOFDeltaOneOverBeta(0.03, StHFCuts::kPion); //changed to 0.03 (same cut as used in analysis)
   hfCuts->setCutPtotRangeHybridTOF(0.3,50.0,StHFCuts::kPion); //changed lower boundary from 0.5 to 0.3 (same cut as used in analysis)
+
+
+  //pion and kaon pair cuts
+  hfCuts->setCutPiPairInvMassInterval(0.4, 0.6); //inv. mass interval for K0s -> pi+pi
+  hfCuts->setCutKPairInvMassInterval(1.0, 1.04 ); //inv. mass interval for phi -> K+K
+
 
   // set refmultCorr
 //  cout<<"test"<<endl;
@@ -258,7 +272,7 @@ void runPicoDpmAnaMaker(const Char_t *inputFile="test.list", const Char_t *outpu
   //if(nEvents>total) nEvents = total;
 
   for (Int_t i=0; i<nEvents; i++) {
-    if(i%10000==0)
+    if(i%100000==0) //orig 10000
       cout << "Working on eventNumber " << i << endl;
 
     chain->Clear();

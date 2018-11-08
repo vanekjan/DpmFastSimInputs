@@ -68,9 +68,11 @@ set productionbasePath=root://xrdstar.rcf.bnl.gov:1095//home/starlib/home/starre
 # -- submission xml file 
 set xmlFile=submitPicoHFMaker.xml
 
-# -- set min and mx number of files, orig 80 to 90
-set minNFiles=140
-set maxNFiles=150
+# -- set min and mx number of files, min 100, max 110 for HFT inputs; max=min=1 for PID efficiency
+set minNFiles=9
+set maxNFiles=10
+
+set filesPerH=5
 
 # ###############################################
 # -- DON'T CHANGE BELOW THAT LINE
@@ -229,6 +231,9 @@ echo '<\!ENTITY productionBasePath "'${productionbasePath}'">' >> $hackTemplate
 echo '<\!ENTITY starVersion "'${starVersion}'">'               >> $hackTemplate
 echo '<\!ENTITY minNFiles "'${minNFiles}'">'                   >> $hackTemplate
 echo '<\!ENTITY maxNFiles "'${maxNFiles}'">'                   >> $hackTemplate
+#echo '<\!ENTITY minMem "'${minMemory}'">'                   >> $hackTemplate
+#echo '<\!ENTITY maxMem "'${maxMemory}'">'                   >> $hackTemplate
+echo '<\!ENTITY FperH "'${filesPerH}'">'                   >> $hackTemplate
 echo ']>'					       	       >> $hackTemplate
 
 tail -n +2 ${xmlFile} >> $hackTemplate

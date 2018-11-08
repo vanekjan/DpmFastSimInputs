@@ -160,18 +160,21 @@ private:
 
   // -- ADD USER MEMBERS HERE ------------------- 
    //TNtuple *ntp_DMeson; //orig. Kvapil
-   TTree *ntp_Dmeson; //Vanek
+   TTree *Pi_PID_eff; //Vanek
+   TTree *K_PID_eff;
+
+   TTree *TrackEffErr;
 
    StRefMultCorr* mRefmultCorrUtil;
    int mRunNumber;
        
-TString mOutFileBaseName;
+  TString mOutFileBaseName;
 
   bool mFillQaHists;
    TFile* mOutFile;
 
    //Cuts----------------------------
-   static const int m_nParticles = 3;
+   static const int m_nParticles = 2; //removed proton, 11/08/18, Vanek
    //TString m_ParticleName[m_nParticles];
 
    static const int m_nEtasDca = 5;
@@ -188,7 +191,7 @@ TString mOutFileBaseName;
    static const int m_nPtsDca = 19;
   // static float m_PtEdgeDca[m_nPtsDca + 1];
 
-   static const int m_nEtasRatio = 10;
+   static const int m_nEtasRatio = 5; //original 10
   // static float m_EtaEdgeRatio[m_nEtasRatio + 1];
 
    static const int m_nPhisRatio = 11;
@@ -230,35 +233,36 @@ TString mOutFileBaseName;
    TH3F* mh3DcaXyPtCent;
    TH3F* mh3DcaZPtCent;
 
-//---Variables for TTree---------------------------
-	//Pion1
-	Int_t pi1_runId, pi1_eventId;
-	Float_t pi1_phi, pi1_eta, pi1_pt, pi1_dca, pi1_dedx, pi1_nSigma;
-	Int_t pi1_nHitFit, pi1_nHitdedx;
-	Float_t pi1_TOFinvbeta, pi1_betaBase;
+//---Variables for PID TTree---------------------------
+	Float_t Pi1nSigmaTPC, K1nSigmaTPC;
+  Float_t Pi1nSigmaTOF, K1nSigmaTOF; // nSigma TOF = |1/beta - 1/beta_TOF|
 
-	//Pion2
-	Int_t pi2_runId, pi2_eventId;
-	Float_t pi2_phi, pi2_eta, pi2_pt, pi2_dca, pi2_dedx, pi2_nSigma;
-	Int_t pi2_nHitFit, pi2_nHitdedx;
-	Float_t pi2_TOFinvbeta, pi2_betaBase;
+  Float_t Pi1Pt, K1Pt; //single particle pT
+  Float_t Pi1P, K1P; //single particle p
+  
+  Float_t Pi2nSigmaTPC, K2nSigmaTPC;
+  Float_t Pi2nSigmaTOF, K2nSigmaTOF; // nSigma TOF = |1/beta - 1/beta_TOF|
 
-	//Kaon
-	Int_t k_runId, k_eventId;
-	Float_t k_phi, k_eta, k_pt, k_dca, k_dedx, k_nSigma;
-	Int_t k_nHitFit, k_nHitdedx;
-	Float_t k_TOFinvbeta, k_betaBase;
+  Float_t Pi2Pt, K2Pt; //single particle pT
+  Float_t Pi2P, K2P; //single particle p
 
-	//dca, flag, prim. vertex
-	Float_t mdcaMax;
-	Int_t flag;
-	Float_t primVz;
+  Float_t PiPairPt, KPairPt; //pT of mothers of pi/K pairs (K0s, phi)
 
-	//D meson
-	Float_t D_theta, D_decayL, D_phi, D_eta, D_pt, D_mass, D_dV0Max;
+  Float_t PiPairInvMass, KPairInvMass;
 
-	//centrality, refMult
-	Float_t mcentrality, refmult, mrefmultcorr, mreweight;
+  Int_t PiPairCharge, KPairCharge; //0 = unlike-sign, 1 = like-sign
+
+//---Variables for tracking efficiency sys. error
+  Float_t Track_pt;
+  Float_t Track_nHitsFit;
+  Float_t Track_nHitsMax;
+  Float_t Track_nSigmaTPCPi, Track_nSigmaTPCK;
+  Float_t Track_nSigmaTOFPi, Track_nSigmaTOFK;
+  Int_t Track_isHFT; //0 = no HFT (track not matched to the HFT), 1 = isHFTTrack
+
+  Int_t Track_centrality;
+  Float_t Track_reweight;
+
 
 	
 

@@ -149,4 +149,31 @@ bool StHFCuts::hasGoodPtQA(StPicoTrack const *track) const {
 
 	return ( track->gPt() > mPtQA  );
 }
+//___________________________________________________________
+void StHFCuts::setCutPiPairInvMassInterval(float PiInvMassLow, float PiInvMassUp)
+{
+  mPiInvMassLow = PiInvMassLow;
+  mPiInvMassUp = PiInvMassUp;
+}
+//___________________________________________________________
+void StHFCuts::setCutKPairInvMassInterval(float KInvMassLow, float KInvMassUp)
+{
+  mKInvMassLow = KInvMassLow;
+  mKInvMassUp = KInvMassUp;
+}
+//_________________________________________________________
+bool StHFCuts::hasGoodPiInvMass(StLorentzVectorF const &PiPairLorentzVector) const
+{
+  return( mPiInvMassLow < PiPairLorentzVector.m() && mPiInvMassUp > PiPairLorentzVector.m() );
+}
+//_________________________________________________________
+bool StHFCuts::hasGoodKInvMass(StLorentzVectorF const &KPairLorentzVector) const
+{
+  return( mKInvMassLow < KPairLorentzVector.m() && mKInvMassUp > KPairLorentzVector.m() );
+}
+//_________________________________________________________
+bool StHFCuts::hasGoodPtRangeQA(StPicoTrack const *track) const
+{
+  return( mPtmin < track->gPt() && mPtmax > track->gPt() );
+}
 

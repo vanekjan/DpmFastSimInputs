@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8" ?>
-<job fileListSyntax="xrootd" minFilesPerProcess="&minNFiles;" maxFilesPerProcess="&maxNFiles;" simulateSubmission="false">
+<job fileListSyntax="xrootd" minFilesPerProcess="&minNFiles;" maxFilesPerProcess="&maxNFiles;" filesPerHour="&FperH;" simulateSubmission="false">
   <stdout URL="file:&basePath;/jobs/&prodId;/log/$JOBID.out"/>
   <stderr URL="file:&basePath;/jobs/&prodId;/err/$JOBID.err"/>
 
@@ -27,6 +27,7 @@
     endif
 
   </command>
+
 
   <output fromScratch="*.root"    toURL="$PRODPATH/" />
   <output fromScratch="*.log.tgz" toURL="$LOGPATH/" />

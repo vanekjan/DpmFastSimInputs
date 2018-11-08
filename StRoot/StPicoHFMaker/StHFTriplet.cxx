@@ -85,28 +85,19 @@ StHFTriplet::StHFTriplet(StPicoTrack const * const particle1, StPicoTrack const 
   StPhysicalHelixD p2Helix = particle2->helix(bField); //bFiled NOT in kilogauss - properly computed inside helix(double) function in StPicoTrack
   StPhysicalHelixD p3Helix = particle3->helix(bField);
 
-  StThreeVectorF const p1Mom = particle1->gMom(vtx, bField); //momentum at pVtx
-  StThreeVectorF const p2Mom = particle2->gMom(vtx, bField); //bFiled NOT in kilogauss - properly computed inside helix(double) function in StPicoTrack
-  StThreeVectorF const p3Mom = particle3->gMom(vtx, bField);
-
-  // -- move origins of helices to the primary vertex origin
+  // -- move origins of helices to the primary vertex origin - needed lated in the code
   p1Helix.moveOrigin(p1Helix.pathLength(vtx));
   p2Helix.moveOrigin(p2Helix.pathLength(vtx));
   p3Helix.moveOrigin(p3Helix.pathLength(vtx));
 
-  StPhysicalHelixD const p1StraightLine(p1Mom, p1Helix.origin(), 0, particle1->charge());
-  StPhysicalHelixD const p2StraightLine(p2Mom, p2Helix.origin(), 0, particle2->charge());
-  StPhysicalHelixD const p3StraightLine(p3Mom, p3Helix.origin(), 0, particle3->charge());
-
-/* original version, Vanek SL16j
-  StThreeVectorF const p1Mom = particle1->gMom();
+  StThreeVectorF const p1Mom = particle1->gMom(); //origin computed correctly iside StPicoTrack
   StThreeVectorF const p2Mom = particle2->gMom();
   StThreeVectorF const p3Mom = particle3->gMom();
   
   StPhysicalHelixD const p1StraightLine(p1Mom, particle1->origin(), 0, particle1->charge());
   StPhysicalHelixD const p2StraightLine(p2Mom, particle2->origin(), 0, particle2->charge());
   StPhysicalHelixD const p3StraightLine(p3Mom, particle3->origin(), 0, particle3->charge());
-*/
+
 //-----------------------------------------------------------------------------------------
   
   pair<double, double> const ss12 = p1StraightLine.pathLengths(p2StraightLine);
