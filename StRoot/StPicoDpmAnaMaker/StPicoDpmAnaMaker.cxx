@@ -8,7 +8,7 @@ using namespace std;
 
 // _________________________________________________________
 StPicoDpmAnaMaker::StPicoDpmAnaMaker(char const* name, StPicoDstMaker* picoMaker, char const* outputBaseFileName,
-				       char const* inputHFListHFtree = "") :
+               char const* inputHFListHFtree = "") :
   StPicoHFMaker(name, picoMaker, outputBaseFileName, inputHFListHFtree),
   mDecayChannel(kChannel1), mRefmultCorrUtil(NULL),mOutFileBaseName(outputBaseFileName){
 
@@ -29,78 +29,79 @@ int StPicoDpmAnaMaker::InitHF() {
   // EXAMPLE //  mOutList->Add(new TH1F(...));
   // EXAMPLE //  TH1F* hist = static_cast<TH1F*>(mOutList->Last());
     
-	  mOutFileBaseName = mOutFileBaseName.ReplaceAll(".root", "");
-	  
+    mOutFileBaseName = mOutFileBaseName.ReplaceAll(".root", "");
+    
         
     if(mHFCuts->HFTinputsOrPIDefficiency() == 0) //HFT inputs
     {
       histoInit(mOutFileBaseName, true); //for createQA()
 
-		  mRefmultCorrUtil->setVzForWeight(6, -6.0, 6.0);
+      mRefmultCorrUtil->setVzForWeight(6, -6.0, 6.0);
 
       mRefmultCorrUtil->readScaleForWeight("StRoot/StRefMultCorr/macros/weight_grefmult_VpdnoVtx_Vpd5_Run16.txt"); //for new StRefMultCorr, Run16, SL16j
     }   
     
 
-  if(mHFCuts->HFTinputsOrPIDefficiency() == 1) //PID efficiency
+  if(mHFCuts->HFTinputsOrPIDefficiency() == 1) //pion PID efficiency
   {
        
      // -------------- USER VARIABLES -------------------------
     Pi_PID_eff = new TTree("Pi_PID_eff", "Pi_PID_eff");
-    K_PID_eff = new TTree("K_PID_eff", "K_PID_eff");
     //rename trees
     Pi_PID_eff->Branch("Pi1Pt", &Pi1Pt, "Pi1Pt/F");
-    K_PID_eff->Branch("K1Pt", &K1Pt, "K1Pt/F");
   
     Pi_PID_eff->Branch("Pi1P", &Pi1P, "Pi1P/F");
-    K_PID_eff->Branch("K1P", &K1P, "K1P/F");
   
     Pi_PID_eff->Branch("Pi1nSigmaTPC", &Pi1nSigmaTPC, "Pi1nSigmaTPC/F");
-    K_PID_eff->Branch("K1nSigmaTPC", &K1nSigmaTPC, "K1nSigmaTPC/F");
   
     Pi_PID_eff->Branch("Pi1nSigmaTOF", &Pi1nSigmaTOF, "Pi1nSigmaTOF/F");
-    K_PID_eff->Branch("K1nSigmaTOF", &K1nSigmaTOF, "K1nSigmaTOF/F");
   
     Pi_PID_eff->Branch("Pi2Pt", &Pi2Pt, "Pi2Pt/F");
-    K_PID_eff->Branch("K2Pt", &K2Pt, "K2Pt/F");
   
     Pi_PID_eff->Branch("Pi2P", &Pi2P, "Pi2P/F");
-    K_PID_eff->Branch("K2P", &K2P, "K2P/F");
   
     Pi_PID_eff->Branch("Pi2nSigmaTPC", &Pi2nSigmaTPC, "Pi2nSigmaTPC/F");
-    K_PID_eff->Branch("K2nSigmaTPC", &K2nSigmaTPC, "K2nSigmaTPC/F");
   
     Pi_PID_eff->Branch("Pi2nSigmaTOF", &Pi2nSigmaTOF, "Pi2nSigmaTOF/F");
-    K_PID_eff->Branch("K2nSigmaTOF", &K2nSigmaTOF, "K2nSigmaTOF/F");
   
     Pi_PID_eff->Branch("PiPairInvMass", &PiPairInvMass, "PiPairInvMass/F");
-    K_PID_eff->Branch("KPairInvMass", &KPairInvMass, "KPairInvMass/F");
   
     Pi_PID_eff->Branch("PiPairPt", &PiPairPt, "PiPairPt/F");
-    K_PID_eff->Branch("KPairPt", &KPairPt, "KPairPt/F");
   
     Pi_PID_eff->Branch("PiPairCharge", &PiPairCharge, "PiPairCharge/I");
-    K_PID_eff->Branch("KPairCharge", &KPairCharge, "KPairCharge/I");
   }
 
-  if(mHFCuts->HFTinputsOrPIDefficiency() == 2) //tracking efficiency systematic error
+  if(mHFCuts->HFTinputsOrPIDefficiency() == 2) ///kaon PID efficiency
   {
-    TrackEffErr = new TTree("TrackEffErr", "TrackEffErr");
-
-    TrackEffErr->Branch("Track_pt", &Track_pt, "Track_pt/F");
-    TrackEffErr->Branch("Track_nHitsFit", &Track_nHitsFit, "Track_nHitsFit/F");
-    TrackEffErr->Branch("Track_nHitsMax", &Track_nHitsMax, "Track_nHitsMax/F");
-    TrackEffErr->Branch("Track_nSigmaTPCPi", &Track_nSigmaTPCPi, "Track_nSigmaTPCPi/F");
-    TrackEffErr->Branch("Track_nSigmaTOFPi", &Track_nSigmaTOFPi, "Track_nSigmaTOFPi/F");
-    TrackEffErr->Branch("Track_nSigmaTPCK", &Track_nSigmaTPCK, "Track_nSigmaTPCK/F");
-    TrackEffErr->Branch("Track_nSigmaTOFK", &Track_nSigmaTOFK, "Track_nSigmaTOFK/F");
-    TrackEffErr->Branch("Track_isHFT", &Track_isHFT, "Track_isHFT/I");
-    TrackEffErr->Branch("Track_centrality", &Track_centrality, "Track_centrality/I");
-    TrackEffErr->Branch("Track_reweight", &Track_reweight, "Track_reweight/F");
+    
+     // -------------- USER VARIABLES -------------------------
+    K_PID_eff = new TTree("K_PID_eff", "K_PID_eff");
+    //rename trees
+    K_PID_eff->Branch("K1Pt", &K1Pt, "K1Pt/F");
+  
+    K_PID_eff->Branch("K1P", &K1P, "K1P/F");
+  
+    K_PID_eff->Branch("K1nSigmaTPC", &K1nSigmaTPC, "K1nSigmaTPC/F");
+  
+    K_PID_eff->Branch("K1nSigmaTOF", &K1nSigmaTOF, "K1nSigmaTOF/F");
+  
+    K_PID_eff->Branch("K2Pt", &K2Pt, "K2Pt/F");
+  
+    K_PID_eff->Branch("K2P", &K2P, "K2P/F");
+  
+    K_PID_eff->Branch("K2nSigmaTPC", &K2nSigmaTPC, "K2nSigmaTPC/F");
+  
+    K_PID_eff->Branch("K2nSigmaTOF", &K2nSigmaTOF, "K2nSigmaTOF/F");
+  
+    K_PID_eff->Branch("KPairInvMass", &KPairInvMass, "KPairInvMass/F");
+  
+    K_PID_eff->Branch("KPairPt", &KPairPt, "KPairPt/F");
+  
+    K_PID_eff->Branch("KPairCharge", &KPairCharge, "KPairCharge/I");
 
   }
 
-	mRunNumber = 0;
+  mRunNumber = 0;
   return kStOK;
 }
 
@@ -115,8 +116,8 @@ int StPicoDpmAnaMaker::FinishHF() {
   
     if(mHFCuts->HFTinputsOrPIDefficiency() == 1)
     {
-      Pi_PID_eff->Write(); //for TPC and TOF PID efficiency
-      K_PID_eff->Write();
+      Pi_PID_eff->Write(); //for pion TPC and TOF PID efficiency
+      
     }
     
     if(mHFCuts->HFTinputsOrPIDefficiency() == 0)
@@ -126,8 +127,8 @@ int StPicoDpmAnaMaker::FinishHF() {
 
     if(mHFCuts->HFTinputsOrPIDefficiency() == 2) //tracking efficiency systematic error
     {
-      TrackEffErr->Write();
-    }   
+      K_PID_eff->Write(); //for pion TPC and TOF PID efficiency
+    }    
 
   return kStOK;
 }
@@ -139,7 +140,7 @@ int StPicoDpmAnaMaker::MakeHF() {
   //    ... it is usefull to use the methods below
   //     - createCandidates()
   //     - analyzeCandidates()
-//	cout<<"start"<<endl;
+//  cout<<"start"<<endl;
   std::clock_t start1 = std::clock();//kvapil
   if (isMakerMode() == StPicoHFMaker::kWrite) {
     createCandidates();
@@ -151,19 +152,19 @@ int StPicoDpmAnaMaker::MakeHF() {
   else if (isMakerMode() == StPicoHFMaker::kAnalyze) {
     //createCandidates();
 
-    if(mHFCuts->HFTinputsOrPIDefficiency() == 1)
-    {
-      analyzeCandidates(); //for TPC and TOF PID efficiency
-    }
-    
     if(mHFCuts->HFTinputsOrPIDefficiency() == 0)
     {
       createQA(); //for HFT matching and DCA resolution
+    }    
+
+    if(mHFCuts->HFTinputsOrPIDefficiency() == 1)
+    {
+      analyzeCandidates(); //for TPC and TOF pion PID efficiency
     }
 
     if(mHFCuts->HFTinputsOrPIDefficiency() == 2) 
     {
-      createCandidates(); //tracking efficiency systematic error, not needed - calculte from TPC embedding
+      createCandidates(); //for TPC and TOF kaon PID efficiency
     }
     
   }
@@ -186,7 +187,7 @@ int StPicoDpmAnaMaker::createQA(){
 //      cout<<"Q1"<<endl;
 //      mRefmultCorrUtil->setVzForWeight(6, -6.0, 6.0);
 //      mRefmultCorrUtil->readScaleForWeight("StRoot/StRefMultCorr/macros/weight_grefmult_vpd30_vpd5_Run14_P16id.txt");
-//	  cout<<"Q2"<<endl;
+//    cout<<"Q2"<<endl;
       mRefmultCorrUtil->initEvent(mPicoDst->event()->grefMult(), mPrimVtx.z(), mPicoDst->event()->ZDCx()) ;
 
        int const centrality = mRefmultCorrUtil->getCentralityBin9();
@@ -200,15 +201,15 @@ int StPicoDpmAnaMaker::createQA(){
           StPicoTrack const* trk = mPicoDst->track(iTrack);
           if (!trk) continue;
           //StPhysicalHelixD helix = trk->helix(); //SL16d
-		  		StPhysicalHelixD helix = trk->helix(mPicoDst->event()->bField()); //SL16j, Vanek
+          StPhysicalHelixD helix = trk->helix(mPicoDst->event()->bField()); //SL16j, Vanek
           float dca = float(helix.geometricSignedDistance(mPrimVtx));
           StThreeVectorF momentum = trk->gMom(mPrimVtx, mPicoDst->event()->bField());
 
-         	// if (!isGoodQaTrack(trk, momentum, dca)) continue; pt, nhits, pseudorap
-					if (!(mHFCuts->hasGoodPtQA(trk))) continue;
-					if (!(mHFCuts->hasGoodNHitsFitMinHist(trk))) continue;
+           // if (!isGoodQaTrack(trk, momentum, dca)) continue; pt, nhits, pseudorap
+          if (!(mHFCuts->hasGoodPtQA(trk))) continue;
+          if (!(mHFCuts->hasGoodNHitsFitMinHist(trk))) continue;
           if (!(mHFCuts->hasGoodNHitsFitnHitsMax(trk))) continue; //nHitsFit/nHitsMax
-        	if (!(mHFCuts->hasGoodEta(momentum))) continue;
+          if (!(mHFCuts->hasGoodEta(momentum))) continue;
 
           StThreeVectorF dcaPoint = helix.at(helix.pathLength(mPrimVtx.x(), mPrimVtx.y()));
           float dcaZ = dcaPoint.z() - mPrimVtx.z();
@@ -217,20 +218,20 @@ int StPicoDpmAnaMaker::createQA(){
           bool tpcPion = false;
           bool tpcKaon = false;
           bool tpcProton = false;
-		  		if(mHFCuts->hasGoodTPCnSigmaPion(trk)) tpcPion = true;
-		  		if(mHFCuts->hasGoodTPCnSigmaKaon(trk)) tpcKaon = true;
-	      	if(mHFCuts->hasGoodTPCnSigmaProton(trk)) tpcProton = true;
+          if(mHFCuts->hasGoodTPCnSigmaPion(trk)) tpcPion = true;
+          if(mHFCuts->hasGoodTPCnSigmaKaon(trk)) tpcKaon = true;
+          if(mHFCuts->hasGoodTPCnSigmaProton(trk)) tpcProton = true;
           //float hBeta = mHFCuts->getTofBetaBase(trk); //SL16d
-		  		float hBeta = mHFCuts->getTofBetaBase(trk, mPicoDst->event()->bField()); //SL16j, Vanek
+          float hBeta = mHFCuts->getTofBetaBase(trk, mPicoDst->event()->bField()); //SL16j, Vanek
           bool hTofAvailable = !isnan(hBeta) && hBeta > 0;
 /*
           bool tofPion = false;
           bool tofKaon = false;
           bool tofProton = false;
 
-	      	if(fabs(1./hBeta - sqrt(1+M_PION_PLUS*M_PION_PLUS/(momentum.mag()*momentum.mag())))<=mHFCuts->getCutTOFDeltaOneOverBeta(StHFCuts::kPion)) tofPion = true;
+          if(fabs(1./hBeta - sqrt(1+M_PION_PLUS*M_PION_PLUS/(momentum.mag()*momentum.mag())))<=mHFCuts->getCutTOFDeltaOneOverBeta(StHFCuts::kPion)) tofPion = true;
           if(fabs(1./hBeta - sqrt(1+M_KAON_PLUS*M_KAON_PLUS/(momentum.mag()*momentum.mag())))<=mHFCuts->getCutTOFDeltaOneOverBeta(StHFCuts::kKaon)) tofKaon = true;
-		  		if(fabs(1./hBeta - sqrt(1+M_PROTON*M_PROTON/(momentum.mag()*momentum.mag())))) tofProton = true;
+          if(fabs(1./hBeta - sqrt(1+M_PROTON*M_PROTON/(momentum.mag()*momentum.mag())))) tofProton = true;
 
           bool goodPion = (hTofAvailable && tofPion && tpcPion) || (!hTofAvailable && tpcPion);//Always require TPC
           bool goodKaon = (hTofAvailable && tofKaon && tpcKaon) || (!hTofAvailable && tpcKaon);
@@ -262,124 +263,135 @@ int StPicoDpmAnaMaker::createQA(){
 }
 
 // _________________________________________________________
-int StPicoDpmAnaMaker::createCandidates() {
+int StPicoDpmAnaMaker::createCandidates() { //now used for K PID efficiency
  
-
-  mRefmultCorrUtil->init(mPicoDst->event()->runId());
-  if (!mRefmultCorrUtil){
-     LOG_WARN << " No mGRefMultCorrUtil! Skip! " << endl;
-     return kStWarn;
-  }
-  if (mRefmultCorrUtil->isBadRun(mPicoDst->event()->runId())) return kStOK;
-
-  mRefmultCorrUtil->initEvent(mPicoDst->event()->grefMult(), mPrimVtx.z(), mPicoDst->event()->ZDCx()) ;
-
-  int const centrality = mRefmultCorrUtil->getCentralityBin9();
-  const double reweight = mRefmultCorrUtil->getWeight();
-  //const double refmultCor = mRefmultCorrUtil->getRefMultCorr(); 
 
   UInt_t nTracks = mPicoDst->numberOfTracks();
 
   for (unsigned int iTrack = 0; iTrack < nTracks; iTrack++)
   {
+
     StPicoTrack const* trk = mPicoDst->track(iTrack);
     if (!trk) continue;
-    
+    //StPhysicalHelixD helix = trk->helix(); //SL16d
     StPhysicalHelixD helix = trk->helix(mPicoDst->event()->bField()); //SL16j, Vanek
-    float dca = float(helix.geometricSignedDistance(mPrimVtx));
+    //float dca = float(helix.geometricSignedDistance(mPrimVtx));
     
     //StThreeVectorF momentum = trk->gMom(mPrimVtx, mPicoDst->event()->bField());
     //StThreeVectorF momentum = trk->gMom(trk->origin(), mPicoDst->event()->bField());
     StThreeVectorF momentum = trk->gMom();
 
-    //double dcaXy = helix.geometricSignedDistance(mPrimVtx.x(), mPrimVtx.y());    
+    //double dcaXy = helix.geometricSignedDistance(mPrimVtx.x(), mPrimVtx.y());
+    double dcaGlob = helix.geometricSignedDistance(mPrimVtx);
 
-    
+    // if (!isGoodQaTrack(trk, momentum, dca)) continue; pt, nhits, pseudorapif (!(mHFCuts->hasGoodPtQA(trk))) continue;
     if(!(mHFCuts->hasGoodPtRangeQA(trk))) continue;
+    if (!(mHFCuts->hasGoodNHitsFitMinHist(trk))) continue;
+    if (!(mHFCuts->hasGoodNHitsFitnHitsMax(trk))) continue; //nHitsFit/nHitsMax
     if (!(mHFCuts->hasGoodEta(trk->gMom()))) continue;
-    if( fabs(dca) > mHFCuts->cutDca() ) continue;
+    //if( fabs(dcaXy) > mHFCuts->cutDcaXy() ) continue; //remove hard-coded cut
+    if( fabs(dcaGlob) > mHFCuts->cutDca() ) continue; //added 03/27/19
+    if(!(trk->isHFTTrack())) continue;
+
+    //StLorentzVectorF PiFourMom(momentum, mHFCuts->getHypotheticalMass(StHFCuts::kPion));
+    //StLorentzVectorF KFourMom(momentum, mHFCuts->getHypotheticalMass(StHFCuts::kKaon));
 
 
-    Track_pt = trk->gPt();
-
-    Track_nHitsFit = trk->nHitsFit();
-    Track_nHitsMax = trk->nHitsMax();
-
-    Track_nSigmaTPCPi = trk->nSigmaPion();
-    Track_nSigmaTPCK = trk->nSigmaKaon();
-
-    float hBeta = mHFCuts->getTofBetaBase(trk, mPicoDst->event()->bField()); //SL16j, Vanek
-    bool hTofAvailable = !isnan(hBeta) && hBeta > 0;
-
-    if(hTofAvailable)
+    for(unsigned int iTrack2 = iTrack+1; iTrack2 < nTracks; iTrack2++)
     {
+      StPicoTrack const* trk2 = mPicoDst->track(iTrack2);
+      if (!trk2) continue;
+      if( trk->id() == trk2->id()) continue;
 
-      Track_nSigmaTOFPi = 1./hBeta - sqrt(1+M_PION_PLUS*M_PION_PLUS/(momentum.mag()*momentum.mag()));
-      Track_nSigmaTOFK = 1./hBeta - sqrt(1+M_KAON_PLUS*M_KAON_PLUS/(momentum.mag()*momentum.mag()));
-
-    }
-    else
-    {
-      Track_nSigmaTOFPi = -100;
-      Track_nSigmaTOFK = -100;
-    }
-   
-
-    if(!(trk->isHFTTrack()))
-    {
-      Track_isHFT = 1;
-    }
-    else
-    {
-      Track_isHFT = 0;
-    }
-
-    Track_centrality = centrality;
-
-    Track_reweight = reweight;
+      StPhysicalHelixD helix2 = trk2->helix(mPicoDst->event()->bField()); //SL16j, Vanek
 
 
-    TrackEffErr->Fill();
+      //StThreeVectorF momentum2 = trk2->gMom(mPrimVtx, mPicoDst->event()->bField());
+      //StThreeVectorF momentum2 = trk2->gMom(trk2->origin(), mPicoDst->event()->bField());
+      StThreeVectorF momentum2 = trk2->gMom();
+
+      //double dcaXy2 = helix2.geometricSignedDistance(mPrimVtx.x(), mPrimVtx.y());
+      double dcaGlob2 = helix2.geometricSignedDistance(mPrimVtx);
+
+      // if (!isGoodQaTrack(trk, momentum, dca)) continue; pt, nhits, pseudorapif (!(mHFCuts->hasGoodPtQA(trk))) continue;
+      if(!(mHFCuts->hasGoodPtRangeQA(trk2))) continue;
+      if (!(mHFCuts->hasGoodNHitsFitMinHist(trk2))) continue;
+      if (!(mHFCuts->hasGoodNHitsFitnHitsMax(trk2))) continue; //nHitsFit/nHitsMax
+      if (!(mHFCuts->hasGoodEta(trk2->gMom()))) continue;
+      //if( fabs(dcaXy2) > mHFCuts->cutDcaXy()  ) continue;
+      if( fabs(dcaGlob) > mHFCuts->cutDca() ) continue; //added 03/27/19
+      if(!(trk2->isHFTTrack())) continue;
+
+      bool mStraigthLines = false;
+
+
+      StHFPair KPair(trk, trk2, mHFCuts->getHypotheticalMass(StHFCuts::kKaon), mHFCuts->getHypotheticalMass(StHFCuts::kKaon), iTrack, iTrack2, mPrimVtx, mPicoDst->event()->bField(), mStraigthLines);
+      
+      //save values only for pairs with good invarinat mass
+      if( !mHFCuts->isGoodSecondaryVertexPair(KPair) ) continue;
+
+      KPairPt = KPair.pt(); //Kaon pair pT
+
+      KPairInvMass = KPair.m();
+
+      if( (trk->charge() + trk2->charge()) == 0 )
+      {
+        KPairCharge = 0;
+      }
+      else
+      {
+        KPairCharge = 1;
+      }
+
+      K1Pt = trk2->gPt();
+      K2Pt = trk2->gPt();
+
+      K1P = momentum.mag();
+      K2P = momentum2.mag();
+
+      K1nSigmaTPC = trk->nSigmaKaon();
+      K2nSigmaTPC = trk2->nSigmaKaon();
+
+      float hBeta = mHFCuts->getTofBetaBase(trk, mPicoDst->event()->bField()); //SL16j, Vanek
+      float hBeta2 = mHFCuts->getTofBetaBase(trk2, mPicoDst->event()->bField()); //SL16j, Vanek
+      bool hTofAvailable = !isnan(hBeta) && hBeta > 0;
+      bool hTofAvailable2 = !isnan(hBeta2) && hBeta2 > 0;
+
+      if(hTofAvailable)
+      {
+        K1nSigmaTOF = 1./hBeta - sqrt(1+M_KAON_PLUS*M_KAON_PLUS/(momentum.mag()*momentum.mag()));
+      }
+      else
+      {
+        K1nSigmaTOF = -100;
+      }
+
+      if(hTofAvailable2)
+      {
+        K2nSigmaTOF = 1./hBeta2 - sqrt(1+M_KAON_PLUS*M_KAON_PLUS/(momentum2.mag()*momentum2.mag()));
+      }
+      else
+      {
+        K2nSigmaTOF = -100;
+      }
+
+      
+      
+      K_PID_eff->Fill();
+      
+      
+    }//end iTrack2
+  }//end iTrack
+
     
+  
 
-
-  }
-/*
-  // Creating candidates for D+- 3 body decay
-  // D+- -> K+2Pi decay
-  for (unsigned short idxPion1 = 0; idxPion1 < mIdxPicoPions.size(); ++idxPion1) {
-    StPicoTrack const *pion1 = mPicoDst->track(mIdxPicoPions[idxPion1]);
-    // -- Pion selection
-
-    for (unsigned short idxPion2 = idxPion1+1; idxPion2 < mIdxPicoPions.size(); ++idxPion2) {
-      StPicoTrack const *pion2 = mPicoDst->track(mIdxPicoPions[idxPion2]);
-      // -- Pion selection
-      if ( !isCloseTracks(pion1,pion2,mPrimVtx, mBField)) continue;
-
-      for (unsigned short idxKaon = 0; idxKaon < mIdxPicoKaons.size(); ++idxKaon) {
-        StPicoTrack const *kaon = mPicoDst->track(mIdxPicoKaons[idxKaon]);
-        // -- Kaon selection
-        // -- TOF
-		//if( !mHFCuts->isHybridTOFHadron(kaon, mHFCuts->getTofBetaBase(kaon), StHFCuts::kKaon) ) continue; //SL16d
-        if( !mHFCuts->isHybridTOFHadron(kaon, mHFCuts->getTofBetaBase(kaon, mPicoDst->event()->bField()), StHFCuts::kKaon) ) continue; //SL16j, Vanek
-        if (mIdxPicoKaons[idxKaon] == mIdxPicoPions[idxPion1]|| mIdxPicoKaons[idxKaon] == mIdxPicoPions[idxPion2] || mIdxPicoPions[idxPion1] == mIdxPicoPions[idxPion2]) continue;
-				if ( !isCloseTracks(pion1,kaon,mPrimVtx, mBField)) continue;
-				if ( !isCloseTracks(kaon,pion2,mPrimVtx, mBField)) continue;
-        // -- Making triplet
-        StHFTriplet triplet(pion1,pion2,kaon,mHFCuts->getHypotheticalMass(StHFCuts::kPion),mHFCuts->getHypotheticalMass(StHFCuts::kPion),mHFCuts->getHypotheticalMass(StHFCuts::kKaon), mIdxPicoPions[idxPion1],mIdxPicoPions[idxPion2],mIdxPicoKaons[idxKaon], mPrimVtx, mBField);
-        if(mHFCuts->hasGoodTripletdV0Max(triplet)) continue;
-        if (!mHFCuts->isGoodSecondaryVertexTriplet(triplet)) continue;
-        mPicoHFEvent->addHFSecondaryVertexTriplet(&triplet);
-
-      }  // for (unsigned short idxKaon = 0; idxKaon < mIdxPicoKaons.size(); ++idxKaon)
-    } // for (unsigned short idxPion2 = idxPion1+1; idxPion2 < mIdxPicoPions.size(); ++idxPion2)
-  } // for (unsigned short idxPion1 = 0; idxPion1 < mIdxPicoPions.size(); ++idxPion1)
-*/
  return kStOK;
+  
 }
 
 // _________________________________________________________
-int StPicoDpmAnaMaker::analyzeCandidates() { //for pure K and pi samples for TPC and TOF PID efficiency
+int StPicoDpmAnaMaker::analyzeCandidates() { //for pure pi samples for TPC and TOF PID efficiency
 
   UInt_t nTracks = mPicoDst->numberOfTracks();
 
@@ -437,61 +449,29 @@ int StPicoDpmAnaMaker::analyzeCandidates() { //for pure K and pi samples for TPC
 
       StHFPair PiPair(trk, trk2, mHFCuts->getHypotheticalMass(StHFCuts::kPion), mHFCuts->getHypotheticalMass(StHFCuts::kPion), iTrack, iTrack2, mPrimVtx, mPicoDst->event()->bField(), mFalse);
 
-      StHFPair KPair(trk, trk2, mHFCuts->getHypotheticalMass(StHFCuts::kKaon), mHFCuts->getHypotheticalMass(StHFCuts::kKaon), iTrack, iTrack2, mPrimVtx, mPicoDst->event()->bField(), mFalse);
-/*
-      pair<double,double> ss = helix.pathLengths(helix2);  //method from StHFPair and StElectronPair
-      StThreeVectorF momentum = helix.momentumAt(ss.first, mPicoDst->event()->bField() * kilogauss);
-      StThreeVectorF momentum2 = helix2.momentumAt(ss.second, mPicoDst->event()->bField() * kilogauss);
+      //mHFCuts->isGoodSecondaryVertexPair(PiPair);      
 
-      StLorentzVectorF PiFourMom(momentum, momentum.massHypothesis(mHFCuts->getHypotheticalMass(StHFCuts::kPion)));
-      StLorentzVectorF KFourMom(momentum, momentum.massHypothesis(mHFCuts->getHypotheticalMass(StHFCuts::kKaon)));
-
-      StLorentzVectorF PiFourMom2(momentum2, momentum2.massHypothesis(mHFCuts->getHypotheticalMass(StHFCuts::kPion)));
-      StLorentzVectorF KFourMom2(momentum2, momentum2.massHypothesis(mHFCuts->getHypotheticalMass(StHFCuts::kKaon)));
-
-      StLorentzVectorF PiPairFourMom = PiFourMom + PiFourMom2;
-      StLorentzVectorF KPairFourMom = KFourMom + KFourMom2;
-
-      PiPairPt = PiPairFourMom.perp(); //Pion pair pT
-      KPairPt = KPairFourMom.perp(); //Kaon pair pT
-
-      PiPairInvMass = PiPairFourMom.m();
-      KPairInvMass = KPairFourMom.m();
-*/
       PiPairPt = PiPair.pt(); //Pion pair pT
-      KPairPt = KPair.pt(); //Kaon pair pT
 
       PiPairInvMass = PiPair.m();
-      KPairInvMass = KPair.m();
 
       if( (trk->charge() + trk2->charge()) == 0 )
       {
         PiPairCharge = 0;
-        KPairCharge = 0;
       }
       else
       {
         PiPairCharge = 1;
-        KPairCharge = 1;
       }
 
       Pi1Pt = trk->gPt();
       Pi2Pt = trk->gPt();
 
-      K1Pt = trk2->gPt();
-      K2Pt = trk2->gPt();
-
       Pi1P = momentum.mag();
       Pi2P = momentum2.mag();
 
-      K1P = momentum.mag();
-      K2P = momentum2.mag();
-
       Pi1nSigmaTPC = trk->nSigmaPion();
       Pi2nSigmaTPC = trk2->nSigmaPion();
-
-      K1nSigmaTPC = trk->nSigmaKaon();
-      K2nSigmaTPC = trk2->nSigmaKaon();
 
       float hBeta = mHFCuts->getTofBetaBase(trk, mPicoDst->event()->bField()); //SL16j, Vanek
       float hBeta2 = mHFCuts->getTofBetaBase(trk2, mPicoDst->event()->bField()); //SL16j, Vanek
@@ -501,42 +481,28 @@ int StPicoDpmAnaMaker::analyzeCandidates() { //for pure K and pi samples for TPC
       if(hTofAvailable)
       {
         Pi1nSigmaTOF = 1./hBeta - sqrt(1+M_PION_PLUS*M_PION_PLUS/(momentum.mag()*momentum.mag()));
-        K1nSigmaTOF = 1./hBeta - sqrt(1+M_KAON_PLUS*M_KAON_PLUS/(momentum.mag()*momentum.mag()));
-
       }
       else
       {
         Pi1nSigmaTOF = -100; //default value, if TOF is not available
-        K1nSigmaTOF = -100;
-
-
       }
 
       if(hTofAvailable2)
       {
         
         Pi2nSigmaTOF = 1./hBeta2 - sqrt(1+M_PION_PLUS*M_PION_PLUS/(momentum2.mag()*momentum2.mag()));        
-        K2nSigmaTOF = 1./hBeta2 - sqrt(1+M_KAON_PLUS*M_KAON_PLUS/(momentum2.mag()*momentum2.mag()));
       }
       else
       {
-
         Pi2nSigmaTOF = -100;//default value, if TOF is not available
-        K2nSigmaTOF = -100;
-
       }
 
       //save values only for pairs with good invarinat mass
-      if( mHFCuts->isGoodSecondaryVertexPair(PiPair) && mHFCuts->hasGoodPiInvMass(PiPair.lorentzVector()) )
+      if( mHFCuts->isGoodSecondaryVertexPair(PiPair)  )
       {
         Pi_PID_eff->Fill();
       }
-
-      if( mHFCuts->isGoodSecondaryVertexPair(KPair) && mHFCuts->hasGoodKInvMass(KPair.lorentzVector()) )
-      {
-        K_PID_eff->Fill();
-      }
-	    
+      
     }//end iTrack2
   }//end iTrack
 
@@ -558,7 +524,7 @@ bool StPicoDpmAnaMaker::isPion(StPicoTrack const * const trk) const {
    StThreeVectorF t = trk->pMom();
    if (fabs(t.pseudoRapidity()) > 1.) return false; //pridano fabs 1212
    //if (!mHFCuts->isHybridTOFHadron(trk, mHFCuts->getTofBetaBase(trk), StHFCuts::kPion) ) return false; //SL16d
-	 if (!mHFCuts->isHybridTOFHadron(trk, mHFCuts->getTofBetaBase(trk, mPicoDst->event()->bField()), StHFCuts::kPion) ) return false; //SL16j, Vanek
+   if (!mHFCuts->isHybridTOFHadron(trk, mHFCuts->getTofBetaBase(trk, mPicoDst->event()->bField()), StHFCuts::kPion) ) return false; //SL16j, Vanek
    if (!mHFCuts->cutMinDcaToPrimVertex(trk, StPicoCutsBase::kPion)) return false;
   return (mHFCuts->isGoodTrack(trk) && mHFCuts->isTPCHadron(trk, StPicoCutsBase::kPion));
 }
@@ -568,7 +534,7 @@ bool StPicoDpmAnaMaker::isKaon(StPicoTrack const * const trk) const {
   // -- good kaon
   StThreeVectorF t = trk->pMom();
   if (fabs(t.pseudoRapidity()) > 1.) return false;//pridano fabs 1212
-	//if (!mHFCuts->isHybridTOFHadron(trk, mHFCuts->getTofBetaBase(trk), StHFCuts::kKaon) ) return false; //SL16d
+  //if (!mHFCuts->isHybridTOFHadron(trk, mHFCuts->getTofBetaBase(trk), StHFCuts::kKaon) ) return false; //SL16d
   if (!mHFCuts->isHybridTOFHadron(trk, mHFCuts->getTofBetaBase(trk, mPicoDst->event()->bField()), StHFCuts::kKaon) ) return false; //SL16j, Vanek
   if (!mHFCuts->cutMinDcaToPrimVertex(trk, StPicoCutsBase::kKaon)) return false;
   return (mHFCuts->isGoodTrack(trk) && mHFCuts->isTPCHadron(trk, StPicoCutsBase::kKaon));
@@ -586,7 +552,7 @@ double StPicoDpmAnaMaker::DCA(StPicoTrack const * const trk, StThreeVectorF cons
   pHelix.moveOrigin(pHelix.pathLength(vtx));
   return ((pHelix.origin() - vtx).mag());
 */
-	return ((trk->origin() - vtx).mag()); //SL16j, Vanek
+  return ((trk->origin() - vtx).mag()); //SL16j, Vanek
 }
 
 
@@ -598,13 +564,13 @@ bool StPicoDpmAnaMaker::isCloseTracks(StPicoTrack const * const trk1, StPicoTrac
   p2Helix.moveOrigin(p2Helix.pathLength(vtx));
   if( ( p1Helix.origin()-vtx ).mag()>0.2 || ( p2Helix.origin()-vtx ).mag()>0.2 ) return false;
 */
-	if( ( trk1->origin()-vtx ).mag()>0.2 || ( trk2->origin()-vtx ).mag()>0.2 ) return false; //SL16j, Vanek
+  if( ( trk1->origin()-vtx ).mag()>0.2 || ( trk2->origin()-vtx ).mag()>0.2 ) return false; //SL16j, Vanek
 
   //Requires loading constants
 //  StThreeVectorF const p1Mom = p1Helix.momentum(bField * kilogauss); //SL16d
 //  StThreeVectorF const p2Mom = p2Helix.momentum(bField * kilogauss);
 
-	StThreeVectorF const p1Mom = trk1->gMom(); //SL16j, Vanek
+  StThreeVectorF const p1Mom = trk1->gMom(); //SL16j, Vanek
   StThreeVectorF const p2Mom = trk2->gMom();
   StPhysicalHelixD const p1StraightLine(p1Mom, trk1->origin(), 0, trk1->charge());
   StPhysicalHelixD const p2StraightLine(p2Mom, trk2->origin(), 0, trk2->charge());
@@ -629,8 +595,8 @@ void StPicoDpmAnaMaker::histoInit(TString fileBaseName, bool fillQaHists){
    float m_VzEdgeDca[m_nVzsDca + 1] = { -6.0, -3.0, 0, 3.0, 6.0};//replace bottom!!!
    float m_CentEdgeDca[m_nCentsDca + 1] = { -0.5, 0.5, 1.5, 2.5, 3.5, 4.5, 5.5, 6.5, 7.5, 8.5};
    float m_PtEdgeDca[m_nPtsDca + 1] = {0.3, 0.4, 0.5, 0.6,  0.7, 0.8, 0.9, 1.0, 1.25, 1.5, 1.75, 2.0, 2.25, 2.5, 2.75, 3.0, 3.5, 4.0, 6.0, 12.0};
-   //float m_EtaEdgeRatio[m_nEtasRatio + 1] = { -1.0, -0.8, -0.6, -0.4, -0.2, 0.0, 0.2, 0.4 , 0.6, 0.8, 1.0}; //old binning, 10 bins
-   float m_EtaEdgeRatio[m_nEtasRatio + 1] = {-1.0, -0.6, -0.2, 0.2, 0.6, 1.0}; //changed 08/15/18, Vanek
+   float m_EtaEdgeRatio[m_nEtasRatio + 1] = { -1.0, -0.8, -0.6, -0.4, -0.2, 0.0, 0.2, 0.4 , 0.6, 0.8, 1.0}; //old binning, 10 bins
+   //float m_EtaEdgeRatio[m_nEtasRatio + 1] = {-1.0, -0.6, -0.2, 0.2, 0.6, 1.0}; //changed 08/15/18, Vanek
    float m_PhiEdgeRatio[m_nPhisRatio + 1] = { -3.14159, -2.80359, -2.17527, -1.54696, -0.918637, -0.290319, 0.338, 0.966319, 1.59464, 2.22296, 2.85127, 3.14159};//replace bottom!!!
    float m_VzEdgeRatio[m_nVzsRatio + 1] = { -6.0, -4.0, -2.0, 0, 2.0, 4.0, 6.0};//replace bottom!!!
    float m_CentEdgeRatio[m_nCentsRatio + 1] = { -1.5, -0.5, 0.5, 1.5, 2.5, 3.5, 4.5, 5.5, 6.5, 7.5, 8.5};
@@ -655,17 +621,17 @@ void StPicoDpmAnaMaker::histoInit(TString fileBaseName, bool fillQaHists){
 
    //set in private
    // for(int temp = 0;temp<m_nParticles;temp++) m_ParticleName[temp]=temp_ParticleName[temp];
-	//for(int temp = 0;temp<m_nEtasDca+1;temp++) m_EtaEdgeDca[temp]=temp_EtaEdgeDca[temp];
-	//for(int temp2 = 0;temp2<m_nPhisDca+1;temp2++) m_PhiEdgeDca[temp2]=temp_PhiEdgeDca[temp2];
-	/*for(int temp = 0;temp<m_nVzsDca+1;temp++) m_VzEdgeDca[temp]=temp_VzEdgeDca[temp];
-	for(int temp = 0;temp<m_nCentsDca+1;temp++) m_CentEdgeDca[temp]=temp_CentEdgeDca[temp];
-	for(int temp = 0;temp<m_nPtsDca+1;temp++) m_PtEdgeDca[temp]=temp_PtEdgeDca[temp];
-	for(int temp = 0;temp<m_nEtasRatio+1;temp++) m_EtaEdgeRatio[temp]=temp_EtaEdgeRatio[temp];
-	for(int temp = 0;temp<m_nPhisRatio+1;temp++) m_PhiEdgeRatio[temp]=temp_PhiEdgeRatio[temp];
-	for(int temp = 0;temp<m_nVzsRatio+1;temp++) m_VzEdgeRatio[temp]=temp_VzEdgeRatio[temp];
-	for(int temp = 0;temp<m_nCentsRatio+1;temp++) m_CentEdgeRatio[temp]=temp_CentEdgeRatio[temp];
-	for(int temp = 0;temp<m_nPtsRatio+1;temp++) m_PtEdgeRatio[temp]=temp_PtEdgeRatio[temp];
-	for(int temp = 0;temp<m_nDcasDca+1;temp++) m_DcaEdgeDca[temp]=temp_DcaEdgeDca[temp];*/
+  //for(int temp = 0;temp<m_nEtasDca+1;temp++) m_EtaEdgeDca[temp]=temp_EtaEdgeDca[temp];
+  //for(int temp2 = 0;temp2<m_nPhisDca+1;temp2++) m_PhiEdgeDca[temp2]=temp_PhiEdgeDca[temp2];
+  /*for(int temp = 0;temp<m_nVzsDca+1;temp++) m_VzEdgeDca[temp]=temp_VzEdgeDca[temp];
+  for(int temp = 0;temp<m_nCentsDca+1;temp++) m_CentEdgeDca[temp]=temp_CentEdgeDca[temp];
+  for(int temp = 0;temp<m_nPtsDca+1;temp++) m_PtEdgeDca[temp]=temp_PtEdgeDca[temp];
+  for(int temp = 0;temp<m_nEtasRatio+1;temp++) m_EtaEdgeRatio[temp]=temp_EtaEdgeRatio[temp];
+  for(int temp = 0;temp<m_nPhisRatio+1;temp++) m_PhiEdgeRatio[temp]=temp_PhiEdgeRatio[temp];
+  for(int temp = 0;temp<m_nVzsRatio+1;temp++) m_VzEdgeRatio[temp]=temp_VzEdgeRatio[temp];
+  for(int temp = 0;temp<m_nCentsRatio+1;temp++) m_CentEdgeRatio[temp]=temp_CentEdgeRatio[temp];
+  for(int temp = 0;temp<m_nPtsRatio+1;temp++) m_PtEdgeRatio[temp]=temp_PtEdgeRatio[temp];
+  for(int temp = 0;temp<m_nDcasDca+1;temp++) m_DcaEdgeDca[temp]=temp_DcaEdgeDca[temp];*/
 
    mFillQaHists = fillQaHists;
    //mOutFile = new TFile(fileBaseName+".hists.root", "RECREATE"); //comment Vanek - want only one output file for QA
@@ -729,7 +695,7 @@ void StPicoDpmAnaMaker::histoInit(TString fileBaseName, bool fillQaHists){
          for (int iVz = 0; iVz < m_nVzsDca; iVz++){
             for (int iCent = 0; iCent < m_nCentsDca; iCent++){
 
-   	    	   mh3DcaXyZPtCentPartEtaVzPhi[iParticle][iEta][iVz][iCent]  = new TH3F(Form("mh3DcaXyZPtCentPartEtaVzPhi_%d_%d_%d_%d", iParticle, iEta, iVz, iCent),"mh3DcaXyZPt_"+m_ParticleName[iParticle]+Form("_Eta%2.1f_Vz%2.1f_Cent%2.1f;p_{T}(GeV/c);DcaXy(cm);DcaZ(cm)", m_EtaEdgeDca[iEta], m_VzEdgeDca[iVz], m_CentEdgeDca[iCent]), m_nPtsDca, m_PtEdgeDca, m_nDcasDca, m_DcaEdgeDca, m_nDcasDca, m_DcaEdgeDca); //Dca 1.cm
+              mh3DcaXyZPtCentPartEtaVzPhi[iParticle][iEta][iVz][iCent]  = new TH3F(Form("mh3DcaXyZPtCentPartEtaVzPhi_%d_%d_%d_%d", iParticle, iEta, iVz, iCent),"mh3DcaXyZPt_"+m_ParticleName[iParticle]+Form("_Eta%2.1f_Vz%2.1f_Cent%2.1f;p_{T}(GeV/c);DcaXy(cm);DcaZ(cm)", m_EtaEdgeDca[iEta], m_VzEdgeDca[iVz], m_CentEdgeDca[iCent]), m_nPtsDca, m_PtEdgeDca, m_nDcasDca, m_DcaEdgeDca, m_nDcasDca, m_DcaEdgeDca); //Dca 1.cm
             }
          }
       }
@@ -810,7 +776,7 @@ void StPicoDpmAnaMaker::addDcaPtCent(float dca, float dcaXy, float dcaZ, bool Is
 int StPicoDpmAnaMaker::getEtaIndexDca(float Eta){
    float EtaEdgeDca[m_nEtasDca+1] = {-1.0, -0.6, -0.2, 0.2, 0.6, 1.0};
    for (int i = 0; i < m_nEtasDca; i++){
-	 if ((Eta >= EtaEdgeDca[i]) && (Eta < EtaEdgeDca[i + 1]))
+   if ((Eta >= EtaEdgeDca[i]) && (Eta < EtaEdgeDca[i + 1]))
          return i;
    }
    //std::cout<<"SOMETHING WENT TERRIBRU WONG"<<std::endl;
@@ -831,8 +797,8 @@ int StPicoDpmAnaMaker::getVzIndexDca(float Vz){
 }
 //---------------------------------------------------------------------
 int StPicoDpmAnaMaker::getEtaIndexRatio(float Eta){
-  //float EtaEdgeRatio[m_nEtasRatio + 1] = { -1.0, -0.8, -0.6, -0.4, -0.2, 0.0, 0.2, 0.4 , 0.6, 0.8, 1.0}; //old, 10 bins
-  float EtaEdgeRatio[m_nEtasRatio + 1] = {-1.0, -0.6, -0.2, 0.2, 0.6, 1.0}; //added 08/15/18, Vanek
+  float EtaEdgeRatio[m_nEtasRatio + 1] = { -1.0, -0.8, -0.6, -0.4, -0.2, 0.0, 0.2, 0.4 , 0.6, 0.8, 1.0}; //old, 10 bins
+  //float EtaEdgeRatio[m_nEtasRatio + 1] = {-1.0, -0.6, -0.2, 0.2, 0.6, 1.0}; //added 08/15/18, Vanek
    for (int i = 0; i < m_nEtasRatio; i++){
       if ((Eta >= EtaEdgeRatio[i]) && (Eta < EtaEdgeRatio[i + 1]))
          return i;
@@ -878,20 +844,20 @@ void StPicoDpmAnaMaker::addCent(const double refmultCor, int centrality, const d
 void StPicoDpmAnaMaker::closeFile()
 {
    //mOutFile->cd(); //do not want second file this time
-//	cout<<"CloseFile1"<<endl;
+//  cout<<"CloseFile1"<<endl;
    mh1Cent->Write();
    mh1CentWg->Write();
    mh1gRefmultCor->Write();
    mh1gRefmultCorWg->Write();
    mh2CentVz->Write();
    mh2CentVzWg->Write();
-//	cout<<"CloseFile2"<<endl;
+//  cout<<"CloseFile2"<<endl;
    //HFT ratio QA
    mh2Tpc1PtCent->Write();
    mh2Tpc1PhiVz->Write();
    mh2HFT1PhiVz->Write();
    mh2HFT1PtCent->Write();
-//	cout<<"CloseFile3"<<endl;
+//  cout<<"CloseFile3"<<endl;
    //HFT DCA Ratio
    for (int iParticle = 0; iParticle < m_nParticles; iParticle++)
    {

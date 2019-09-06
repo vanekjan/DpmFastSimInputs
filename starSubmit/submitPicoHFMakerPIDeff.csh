@@ -63,7 +63,8 @@ set starVersion=SL16j
 
 # -- production base path (to find picoDsts to corresponding trees
 #set productionbasePath=/star/data100/reco/AuAu_200_production_2016/ReversedFullField/P16ij/2016
-set productionbasePath=root://xrdstar.rcf.bnl.gov:1095//home/starlib/home/starreco/reco/AuAu_200_production_2016/ReversedFullField/P16ij/2016/
+#set productionbasePath=root://xrdstar.rcf.bnl.gov:1095//home/starlib/home/starreco/reco/AuAu_200_production_2016/ReversedFullField/P16ij/2016/
+set productionbasePath=root://xrdstar.rcf.bnl.gov:1095//home/starlib/home/starreco/reco/AuAu200_production2_2016/
 
 # -- submission xml file 
 set xmlFile=submitPicoHFMaker.xml
@@ -76,7 +77,7 @@ set maxNFiles=1
 #set minMemory=100
 #set maxMemory=399
 
-set filesPerH=0.05
+set filesPerH=1
 
 # ###############################################
 # -- DON'T CHANGE BELOW THAT LINE
