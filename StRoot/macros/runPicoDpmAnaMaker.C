@@ -169,14 +169,14 @@ void runPicoDpmAnaMaker(const Char_t *inputFile="test.list", const Char_t *outpu
   //hfCuts->addTriggerId(520832);    // VPDMB-5-p-hlt
   //hfCuts->addTriggerId(520842);    // VPDMB-5-p-hlt
 
-/*
+
 	hfCuts->addTriggerId(520001);    // VPDMB-5-p-sst
   hfCuts->addTriggerId(520011);    // VPDMB-5-p-sst
   hfCuts->addTriggerId(520021);    // VPDMB-5-p-sst
   hfCuts->addTriggerId(520031);    // VPDMB-5-p-sst
   hfCuts->addTriggerId(520041);    // VPDMB-5-p-sst
   hfCuts->addTriggerId(520051);    // VPDMB-5-p-sst
-*/
+
   hfCuts->addTriggerId(570002);    // VPDMB-5-nosst (production 2, nosst stream)
   hfCuts->addTriggerId(570001);    // VPDMB-5-sst (production 2, sst stream )
 

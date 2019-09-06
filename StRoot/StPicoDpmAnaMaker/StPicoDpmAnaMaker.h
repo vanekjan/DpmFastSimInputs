@@ -191,7 +191,7 @@ private:
    static const int m_nPtsDca = 19;
   // static float m_PtEdgeDca[m_nPtsDca + 1];
 
-   static const int m_nEtasRatio = 5; //original 10
+   static const int m_nEtasRatio = 10; //original 10 - alternative version 5
   // static float m_EtaEdgeRatio[m_nEtasRatio + 1];
 
    static const int m_nPhisRatio = 11;

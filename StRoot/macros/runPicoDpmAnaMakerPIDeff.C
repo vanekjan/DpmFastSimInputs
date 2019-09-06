@@ -62,10 +62,10 @@ class StChain;
 StChain *chain;
 
 void runPicoDpmAnaMakerPIDeff(const Char_t *inputFile="test.list", const Char_t *outputFile="outputBaseName",
-			 const unsigned int makerMode = 0 /*kAnalyze*/,
-			 const Char_t *badRunListFileName = "picoList_bad_MB.list", const Char_t *treeName = "picoHFtree",
-			 const Char_t *productionBasePath = "/star/data100/reco/AuAu_200_production_2016/ReversedFullField/P16ij/2016",
-			 const unsigned int decayChannel = 0 /* kChannel0 */) {
+       const unsigned int makerMode = 0 /*kAnalyze*/,
+       const Char_t *badRunListFileName = "picoList_bad_MB.list", const Char_t *treeName = "picoHFtree",
+       const Char_t *productionBasePath = "/star/data100/reco/AuAu_200_production_2016/ReversedFullField/P16ij/2016",
+       const unsigned int decayChannel = 0 /* kChannel0 */) {
   // -- Check STAR Library. Please set SL_version to the original star library used in the production
   //    from http://www.star.bnl.gov/devcgi/dbProdOptionRetrv.pl
   string SL_version = "SL16j"; //new: SL16d -> SL16j
@@ -162,34 +162,36 @@ void runPicoDpmAnaMakerPIDeff(const Char_t *inputFile="test.list", const Char_t 
   hfCuts->addTriggerId(450015);    // vpdmb-5-p-nobsmd
   hfCuts->addTriggerId(450025);    // vpdmb-5-p-nobsmd
 */
-	//SL16j triggers
+  //SL16j triggers
   //hfCuts->addTriggerId(520802);    // VPDMB-5-p-hlt
   //hfCuts->addTriggerId(520812);    // VPDMB-5-p-hlt
   //hfCuts->addTriggerId(520822);    // VPDMB-5-p-hlt
   //hfCuts->addTriggerId(520832);    // VPDMB-5-p-hlt
   //hfCuts->addTriggerId(520842);    // VPDMB-5-p-hlt
-/*
-	hfCuts->addTriggerId(520001);    // VPDMB-5-p-sst
+
+  //physics stream
+  hfCuts->addTriggerId(520001);    // VPDMB-5-p-sst
   hfCuts->addTriggerId(520011);    // VPDMB-5-p-sst
   hfCuts->addTriggerId(520021);    // VPDMB-5-p-sst
   hfCuts->addTriggerId(520031);    // VPDMB-5-p-sst
   hfCuts->addTriggerId(520041);    // VPDMB-5-p-sst
   hfCuts->addTriggerId(520051);    // VPDMB-5-p-sst
-*/
+
+  //sst+nosst streams
   hfCuts->addTriggerId(570002);    // VPDMB-5-nosst (production 2, nosst stream)
   hfCuts->addTriggerId(570001);    // VPDMB-5-sst (production 2, sst stream )
 
 
-  hfCuts->setHFTinputsOrPIDefficiency(1); //0 - HFT inputs; 1 - PID efficiency; 2 - tracking efficiency systematic error
+  hfCuts->setHFTinputsOrPIDefficiency(1); //0 - HFT inputs; 1 - pi PID efficiency; 2 - K PID efficiency; have to set proper cuts
 
   hfCuts->setCutNHitsFitMin(15); //kvapil 20 to 15, for candidates
-	hfCuts->setCutNHitsFitMinHist(20); //for histograms, Vanek
+  hfCuts->setCutNHitsFitMinHist(20); //for histograms, Vanek
   hfCuts->setCutRequireHFT(true);
   
   //check all cuts in StHFCuts after HFMaker update - see GitHub for reference
-	hfCuts->setCutDca(1.5); //for QA, see createQA() in StPicoDpmAnaMaker.cxx
-	hfCuts->setCutDcaXy(1.);
-	hfCuts->setCutDcaZ(1.);
+  hfCuts->setCutDca(1.5); //original 1.5 - now tried to limit the DCA to PV so that only tracks very close to the PV are selected
+  hfCuts->setCutDcaXy(1.0); //original 1. - now tried to limit the DCA to PV so that only tracks very close to the PV are selected (now not used ind the code)
+  hfCuts->setCutDcaZ(1.0);  //original 1. - now tried to limit the DCA to PV so that only tracks very close to the PV are selected (now not used ind the code)
 
   
   // ---------------------------------------------------
@@ -200,54 +202,77 @@ void runPicoDpmAnaMakerPIDeff(const Char_t *inputFile="test.list", const Char_t 
 
   // -- ADD USER CUTS HERE ----------------------------
 
-	hfCuts->setCutEta(1.);
+  hfCuts->setCutEta(1.);
 
 
-	//-----------SECONDARY PAIR CUTS----------------------------
+  //-----------SECONDARY PAIR CUTS----------------------------
   float dcaDaughtersMax;
   float decayLengthMin, decayLengthMax;
-	float cosThetaMin, massMin, massMax;
- //K0s cuts
-        dcaDaughtersMax = 0.01;
+  float cosThetaMin, massMin, massMax;
+ 
+  //K0s cuts
+  dcaDaughtersMax = 0.01;
 
-	decayLengthMin = 0.5;
-	decayLengthMax = 100.;
+  decayLengthMin = 0.5;
+  decayLengthMax = 100.;
 
-	cosThetaMin = 0.995;
-	massMin = 0.4;
-	massMax = 1.04;
+  cosThetaMin = 0.995;
 
- /*       //phi cuts by Guannan: bool isReco =  decayLength < 5 && DCA < 0.5 && pairDCA < 0.5 && fabs(cosTheta) > 0.8 && mass > 1.0 && mass < 1.04;
-        dcaDaughtersMax = 0.01;
+  massMin = 0.45;
+  massMax = 0.55;
 
-        decayLengthMin = 0.0;
-        decayLengthMax = 0.001;
+/*
+  //phi cuts by Guannan: bool isReco =  decayLength < 5 && DCA < 0.5 && pairDCA < 0.5 && fabs(cosTheta) > 0.8 && mass > 1.0 && mass < 1.04;
+  dcaDaughtersMax = 0.5;
 
-        cosThetaMin = 0.0;
-        massMin = 0.4;
-        massMax = 1.04;
+  decayLengthMin = 0.0;
+  decayLengthMax = 5.0;
+
+  cosThetaMin = 0.8; 
+
+  //phi cuts by Luaks (see his slides on PID efficiency)
+  dcaDaughtersMax = 1.0; //from Lukas
+
+  decayLengthMin = 0.0;
+  decayLengthMax = 25.0; //from Lukas
+
+  cosThetaMin = 0.85; //from Lukas
+
+  //phi cuts - my
+  dcaDaughtersMax = 0.05; 
+
+  decayLengthMin = 0.0;
+  decayLengthMax = 5.0; 
+
+  cosThetaMin = 0.85; 
+  
+
+  massMin = 1.0;
+  massMax = 1.04;
 */
 
   hfCuts->setCutSecondaryPair(dcaDaughtersMax, decayLengthMin, decayLengthMax, cosThetaMin, massMin, massMax);
 
   hfCuts->setCutSecondaryPairDcaToPvMax(0.5); //for K0s
-  //hfCuts->setCutSecondaryPairDcaToPvMax(0.001); //for phi
+  //hfCuts->setCutSecondaryPairDcaToPvMax(1.0); //for phi - from Lukas
+//  hfCuts->setCutSecondaryPairDcaToPvMax(0.5); //for phi - from Guannan
+  //hfCuts->setCutSecondaryPairDcaToPvMax(0.05); //for phi - my
 
-	
+  
   //Single track pt
   hfCuts->setCutPtRange(0.3,50.0,StHFCuts::kPion); //used in candidates analysis
   hfCuts->setCutPtRange(0.3,50.0,StHFCuts::kKaon); //changed to 0.3
 
-	hfCuts->setCutPtQA(0.3); //p_T used in createQA() for HFT efficiency
-  hfCuts->setCutPtRangeQA(0.2, 4.0); //pT range for PID efficiency
+  hfCuts->setCutPtQA(0.3); //p_T used in createQA() for HFT efficiency
+  hfCuts->setCutPtRangeQA(0.2, 10.0); //pT range for PID efficiency
 
   //TPC setters
   hfCuts->setCutTPCNSigmaPion(1.0); //possibly close as possible, e.g. 1.0
   hfCuts->setCutTPCNSigmaKaon(1.0); //all changed to 1.0
-	hfCuts->setCutTPCNSigmaProton(1.0); //for QA and analysis
+  hfCuts->setCutTPCNSigmaProton(1.0); //for QA and analysis
 
-	hfCuts->setCutTPCNSigmaHadronHist(1.0, 1); //1 = pion, not used for QA
-	hfCuts->setCutTPCNSigmaHadronHist(1.0, 2); //2 = kaon
+  hfCuts->setCutTPCNSigmaHadronHist(1.0, 1); //1 = pion, not used for QA
+  hfCuts->setCutTPCNSigmaHadronHist(1.0, 2); //2 = kaon
   //TOF setters, need to set pt range as well
   hfCuts->setCutTOFDeltaOneOverBeta(0.03, StHFCuts::kKaon); //changed to 0.03 (same cut as used in analysis)
   hfCuts->setCutPtotRangeHybridTOF(0.3,50.0,StHFCuts::kKaon); //changed lower boundary from 0.5 to 0.3 (same cut as used in analysis)
@@ -256,7 +281,7 @@ void runPicoDpmAnaMakerPIDeff(const Char_t *inputFile="test.list", const Char_t 
 
 
   //pion and kaon pair cuts
-  hfCuts->setCutPiPairInvMassInterval(0.4, 0.6); //inv. mass interval for K0s -> pi+pi
+  hfCuts->setCutPiPairInvMassInterval(0.45, 0.55); //inv. mass interval for K0s -> pi+pi
   hfCuts->setCutKPairInvMassInterval(1.0, 1.04 ); //inv. mass interval for phi -> K+K
 
 
