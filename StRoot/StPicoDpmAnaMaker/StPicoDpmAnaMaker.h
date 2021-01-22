@@ -124,9 +124,9 @@ class StPicoDpmAnaMaker : public StPicoHFMaker
  //  float getTofBeta(StPicoTrack const*,StThreeVectorF const& vtx) const;
 
    void histoInit(TString fileBaseName,bool fillQaHists=true);
-   void addTpcDenom1(bool IsPion, bool IsKaon, bool IsProton, float pt, int centrality, float Eta, float Phi, float Vz);
-   void addHFTNumer1(bool IsPion, bool IsKaon, bool IsProton, float pt, int centrality, float Eta, float Phi, float Vz);
-   void addDcaPtCent(float dca, float dcaXy, float  dcaZ, bool IsPion, bool IsKaon, bool IsProton, float pt,  int centrality, float Eta, float Phi, float Vz);
+   void addTpcDenom1(bool IsPion, bool IsKaon, bool IsProton, float pt, int centrality, float reweight, float Eta, float Phi, float Vz);
+   void addHFTNumer1(bool IsPion, bool IsKaon, bool IsProton, float pt, int centrality, float reweight, float Eta, float Phi, float Vz);
+   void addDcaPtCent(float dca, float dcaXy, float  dcaZ, bool IsPion, bool IsKaon, bool IsProton, float pt,  int centrality, float reweight, float Eta, float Phi, float Vz);
    int getEtaIndexDca(float Eta) ;
    int getPhiIndexDca(float Phi) ;
    int getVzIndexDca(float Vz) ;
@@ -223,11 +223,11 @@ private:
    TH2F* mh2Tpc1PhiVz;
    TH2F* mh2HFT1PtCent;
    TH2F* mh2HFT1PhiVz;
-   TH2F* mh2Tpc1PtCentPartEtaVzPhi[m_nParticles][m_nEtasRatio][m_nVzsRatio][m_nPhisRatio];
-   TH2F* mh2HFT1PtCentPartEtaVzPhi[m_nParticles][m_nEtasRatio][m_nVzsRatio][m_nPhisRatio];
+   TH2D* mh2Tpc1PtCentPartEtaVzPhi[m_nParticles][m_nEtasRatio][m_nVzsRatio][m_nPhisRatio];
+   TH2D* mh2HFT1PtCentPartEtaVzPhi[m_nParticles][m_nEtasRatio][m_nVzsRatio][m_nPhisRatio];
 
    //HFT Dca
-   TH3F* mh3DcaXyZPtCentPartEtaVzPhi[m_nParticles][m_nEtasDca][m_nVzsDca][m_nCentsDca];
+   TH3F* mh3DcaXyZPtCentPartEtaVzPhi[m_nParticles][m_nEtasDca][m_nVzsDca][m_nCentsDca]; //changed back to TH3F to test memory usage
 
    TH3F* mh3DcaPtCent;
    TH3F* mh3DcaXyPtCent;

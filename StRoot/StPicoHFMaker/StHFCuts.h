@@ -86,7 +86,7 @@ class StHFCuts : public StPicoCutsBase
   void setCutPiPairInvMassInterval(float PiInvMassLow, float PiInvMassUp);
   void setCutKPairInvMassInterval(float KInvMassLow, float KInvMassUp);
 
-  void setHFTinputsOrPIDefficiency(int QA_mode) {mQA_mode = QA_mode;}
+  
 //----MY SETTERS------------------------------------------------------------------------------------------
 
 	void setCutNHitsFitMinHist(int i) {mNHitsFitMinHist = i;}
@@ -100,6 +100,10 @@ class StHFCuts : public StPicoCutsBase
   void setCutDcaZ(float dcaZ) { mDcaZQA = dcaZ; }
 
   void setCutPtRangeQA(float Ptmin, float Ptmax) {mPtmin = Ptmin; mPtmax = Ptmax;}
+
+  void setHFTinputsOrPIDefficiency(int QA_mode) {mQA_mode = QA_mode;}
+
+  void setHFTratiosOrDCAdistributions(int HFTorDCA) {mHFTorDCA = HFTorDCA;}
 //--------------------------------------------------------------------------------------------------------
 
   // -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- --   
@@ -142,6 +146,7 @@ class StHFCuts : public StPicoCutsBase
 
   const int&      HFTinputsOrPIDefficiency() const;
 	
+  const int&      HFTratiosOrDCAdistributions() const;
 //--------------------------------------------------------------------------------------------------------
 
  private:
@@ -172,6 +177,8 @@ class StHFCuts : public StPicoCutsBase
   int mQA_mode;
 
   float mPtmax, mPtmin;
+
+  int mHFTorDCA;
 
 	//---------------------------------------
 
@@ -277,5 +284,7 @@ inline const float&		 StHFCuts::cutDcaXy() const { return mDcaXyQA; }
 inline const float&		 StHFCuts::cutDcaZ()	const { return mDcaZQA; }
 
 inline const int&      StHFCuts::HFTinputsOrPIDefficiency() const {return mQA_mode;}
+
+inline const int&      StHFCuts::HFTratiosOrDCAdistributions() const {return mHFTorDCA;}
 
 #endif
