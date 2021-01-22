@@ -1,6 +1,7 @@
 #ifndef StHFHists__h
 #define StHFHists__h
 
+
 /* **************************************************
  *  A class to create and save production QA
  *  histograms.
