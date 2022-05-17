@@ -14,9 +14,10 @@
 #include "StBTofUtil/tofPathLength.hh"
 
 #include "StPicoDstMaker/StPicoDst.h"
-#include "StPicoDstMaker/StPicoTrack.h"
-#include "StPicoDstMaker/StPicoEvent.h"
-#include "StPicoDstMaker/StPicoBTofPidTraits.h"
+
+#include "StPicoEvent/StPicoTrack.h"
+#include "StPicoEvent/StPicoEvent.h"
+#include "StPicoEvent/StPicoBTofPidTraits.h"
 
 
 ClassImp(StPicoCutsBase)
@@ -229,12 +230,7 @@ bool StPicoCutsBase::isGoodTrack(StPicoTrack const * const trk) const {
 // _________________________________________________________
 bool StPicoCutsBase::cutMinDcaToPrimVertex(StPicoTrack const * const trk, int pidFlag) const {
   // -- check on min dca for identified particle
-/*
-  StPhysicalHelixD helix = trk->dcaGeometry().helix(); //SL16d
-  helix.moveOrigin(helix.pathLength(mPrimVtx));
 
-	float dca = (mPrimVtx - helix.origin()).mag();
-*/
   //new SL16j Vanek
   float dca = (mPrimVtx - trk->origin()).mag(); //origin computed inside StPicoTrack
 
@@ -245,12 +241,7 @@ bool StPicoCutsBase::cutMinDcaToPrimVertex(StPicoTrack const * const trk, int pi
 bool StPicoCutsBase::cutMinDcaToPrimVertexTertiary(StPicoTrack const * const trk, int pidFlag) const {
   // -- check on min dca for identified particle - used for tertiary particles only
 
- /*
-  StPhysicalHelixD helix = trk->dcaGeometry().helix(); //SL16d
-  helix.moveOrigin(helix.pathLength(mPrimVtx));
 
-	float dca = (mPrimVtx - helix.origin()).mag();
-*/
   //new SL16j Vanek
   float dca = (mPrimVtx - trk->origin()).mag(); //origin computed inside StPicoTrack
 
@@ -309,7 +300,6 @@ bool StPicoCutsBase::isTOFHadronPID(StPicoTrack const *trk, float const & tofBet
   if (tofBeta <= 0) 
     return false;
   
-  //float ptot    = trk->dcaGeometry().momentum().mag(); //SL16d
 	float ptot    = trk->gPtot(); //SL16j, Vanek
   float betaInv = sqrt(ptot*ptot + mHypotheticalMass2[pidFlag]) / ptot;
   return ( fabs(1/tofBeta - betaInv) < mTOFDeltaOneOverBetaMax[pidFlag] );
@@ -325,7 +315,6 @@ bool StPicoCutsBase::isTOFHadron(StPicoTrack const *trk, float const & tofBeta, 
   //      not in ptot range : true
 
   // -- only apply, if in ptot range
-  //float ptot = trk->dcaGeometry().momentum().mag(); //SL16d
 	float ptot = trk->gPtot(); //SL16j, Vanek
   if (ptot < mPtotRangeTOF[pidFlag][0] || ptot >= mPtotRangeTOF[pidFlag][1])
     return true;
@@ -344,7 +333,6 @@ bool StPicoCutsBase::isHybridTOFHadron(StPicoTrack const *trk, float const & tof
   //      no TOF info       : true
 
   // -- only apply, if in ptot range
-  //float ptot = trk->dcaGeometry().momentum().mag(); //SL16d
 	float ptot = trk->gPtot(); //SL16j, Vanek
   if (ptot < mPtotRangeHybridTOF[pidFlag][0] || ptot >= mPtotRangeHybridTOF[pidFlag][1])
     return true;
@@ -382,8 +370,7 @@ float StPicoCutsBase::getTofBetaBase(StPicoTrack const * const trk, float B) con
 
   beta = tofPid->btofBeta();
   if (beta < 1e-4) {
-    StThreeVectorF const btofHitPos = tofPid->btofHitPos();
-		//StPhysicalHelixD helix = trk->helix(); //SL16d    
+    StThreeVectorF const btofHitPos = tofPid->btofHitPos(); 
 		StPhysicalHelixD helix = trk->helix(B); //SL16j, Vanek
     float pathLength = tofPathLength(&mPrimVtx, &btofHitPos, helix.curvature());
     float tof = tofPid->btof();
@@ -400,9 +387,6 @@ float StPicoCutsBase::getTofBeta(StPicoTrack const * const trk, float B) const {
   //      - primary hadrons 
   //      - secondarys from charm decays (as an approximation)
   //    -> apply DCA cut to primary vertex to make sure only primaries or secondary HF decays are used
-
-  //StPhysicalHelixD helix = trk->helix(); //SL16d
-  //return ((helix.origin() - mPrimVtx).mag() < mPrimaryDCAtoVtxMax) ? getTofBetaBase(trk) : std::numeric_limits<float>::quiet_NaN();
 
 	return ((trk->origin() - mPrimVtx).mag() < mPrimaryDCAtoVtxMax) ? getTofBetaBase(trk, B) : std::numeric_limits<float>::quiet_NaN(); //SL16j, Vanek
 }
@@ -429,7 +413,6 @@ float StPicoCutsBase::getTofBeta(StPicoTrack const * const trk,
   mTOFCorr->setMotherTracks(secondaryMother);
   
   float tof = tofPid->btof();
-  //StPhysicalHelixD helix = trk->helix(); //SL16d
 	StPhysicalHelixD helix = trk->helix(B); //SL16j, Vanek
   
   // -- correct beta
@@ -465,7 +448,6 @@ float StPicoCutsBase::getTofBeta(StPicoTrack const * const trk,
   mTOFCorr->setMotherTracks(secondaryMother)(tertiaryMother);
   
   float tof = tofPid->btof();
-  //StPhysicalHelixD helix = trk->helix(); //SL16d
 	StPhysicalHelixD helix = trk->helix(B); //SL16j, Vanek
   
   // -- correct beta

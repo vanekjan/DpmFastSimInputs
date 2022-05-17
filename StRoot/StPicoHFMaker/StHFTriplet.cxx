@@ -5,7 +5,7 @@
 
 #include "StarClassLibrary/StPhysicalHelixD.hh"
 #include "StarClassLibrary/SystemOfUnits.h"
-#include "StPicoDstMaker/StPicoTrack.h"
+#include "StPicoEvent/StPicoTrack.h"
 
 ClassImp(StHFTriplet)
 
@@ -59,25 +59,7 @@ StHFTriplet::StHFTriplet(StPicoTrack const * const particle1, StPicoTrack const 
     mParticle3Idx = std::numeric_limits<unsigned short>::max();
     return;
   }
-/* SL16d
-  StPhysicalHelixD p1Helix = particle1->dcaGeometry().helix();
-  StPhysicalHelixD p2Helix = particle2->dcaGeometry().helix();
-  StPhysicalHelixD p3Helix = particle3->dcaGeometry().helix();
-  
-   // -- move origins of helices to the primary vertex origin
-  p1Helix.moveOrigin(p1Helix.pathLength(vtx));
-  p2Helix.moveOrigin(p2Helix.pathLength(vtx));
-  p3Helix.moveOrigin(p3Helix.pathLength(vtx));
-  
-  // -- use straight lines approximation to get point of DCA of particle1-particle2 pair
-  StThreeVectorF const p1Mom = p1Helix.momentum(bField * kilogauss);
-  StThreeVectorF const p2Mom = p2Helix.momentum(bField * kilogauss);
-  StThreeVectorF const p3Mom = p3Helix.momentum(bField * kilogauss);
-  
-  StPhysicalHelixD const p1StraightLine(p1Mom, p1Helix.origin(), 0, particle1->charge());
-  StPhysicalHelixD const p2StraightLine(p2Mom, p2Helix.origin(), 0, particle2->charge());
-  StPhysicalHelixD const p3StraightLine(p3Mom, p3Helix.origin(), 0, particle3->charge());
-*/
+
 	//-----------------------------------------------------------------------------------------	
 	// -- use straight lines approximation to get point of DCA of particle1-particle2 pair
 	//SL16j, Vanek
@@ -90,7 +72,7 @@ StHFTriplet::StHFTriplet(StPicoTrack const * const particle1, StPicoTrack const 
   p2Helix.moveOrigin(p2Helix.pathLength(vtx));
   p3Helix.moveOrigin(p3Helix.pathLength(vtx));
 
-  StThreeVectorF const p1Mom = particle1->gMom(); //origin computed correctly iside StPicoTrack
+  StThreeVectorF const p1Mom = particle1->gMom();
   StThreeVectorF const p2Mom = particle2->gMom();
   StThreeVectorF const p3Mom = particle3->gMom();
   

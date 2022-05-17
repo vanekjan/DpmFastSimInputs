@@ -5,7 +5,7 @@
 #include "TNtuple.h"
 #include "StRefMultCorr/StRefMultCorr.h"
 #include "TH2F.h"
-//#include "StPicoDpmAnaHists.h"
+
 #include <vector>
 
 #include "TClonesArray.h"
@@ -15,9 +15,10 @@
 
 #include "StPicoDstMaker/StPicoDst.h"
 #include "StPicoDstMaker/StPicoDstMaker.h"
-#include "StPicoDstMaker/StPicoEvent.h"
-#include "StPicoDstMaker/StPicoTrack.h"
-#include "StPicoDstMaker/StPicoBTofPidTraits.h"
+
+#include "StPicoEvent/StPicoEvent.h"
+#include "StPicoEvent/StPicoTrack.h"
+#include "StPicoEvent/StPicoBTofPidTraits.h"
 
 #include "StPicoHFMaker/StPicoHFEvent.h"
 #include "StPicoHFMaker/StHFCuts.h"
@@ -108,7 +109,7 @@ class StPicoDpmAnaMaker : public StPicoHFMaker
   virtual Int_t MakeHF();
   virtual void  ClearHF(Option_t *opt);
   virtual Int_t FinishHF();
-  // -- Lomnitz: Added this cut funtions to to filter iwthout having to make pairs
+
   virtual bool isCloseTracks(StPicoTrack const*, StPicoTrack const*,StThreeVectorF const & , float) const;
   virtual double DCA(StPicoTrack const*, StThreeVectorF const &) const;
   int createQA();
@@ -121,8 +122,6 @@ class StPicoDpmAnaMaker : public StPicoHFMaker
   void setRefMutCorr(StRefMultCorr* gRefMultCorr) { mRefmultCorrUtil = gRefMultCorr; }
   StRefMultCorr* getRefMultCorr() { return mRefmultCorrUtil; }
 
- //  float getTofBeta(StPicoTrack const*,StThreeVectorF const& vtx) const;
-
    void histoInit(TString fileBaseName,bool fillQaHists=true);
    void addTpcDenom1(bool IsPion, bool IsKaon, bool IsProton, float pt, int centrality, float reweight, float Eta, float Phi, float Vz);
    void addHFTNumer1(bool IsPion, bool IsKaon, bool IsProton, float pt, int centrality, float reweight, float Eta, float Phi, float Vz);
@@ -133,13 +132,8 @@ class StPicoDpmAnaMaker : public StPicoHFMaker
    int getEtaIndexRatio(float Eta) ;
    int getPhiIndexRatio(float Phi) ;
    int getVzIndexRatio(float Vz) ;
-   void addCent(const double refmultCor, int centrality, const double reweight, const float vz);
    void closeFile();
 
- // virtual float getEta(int index){return m_EtaEdgeDca[index];};
-
-
- //  ClassDef(StPicoDpmAnaMaker, 1)
 
  protected:
   virtual bool isHadron(StPicoTrack const*, int pidFlag) const;

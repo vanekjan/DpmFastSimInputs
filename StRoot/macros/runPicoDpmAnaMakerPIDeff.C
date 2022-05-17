@@ -48,7 +48,7 @@
 #include <ctime>
 #include <cstdio>
 
-#include "StPicoDpmAnaMaker/StPicoDpmAnaMaker.h" //kvapil
+#include "StPicoDpmAnaMaker/StPicoDpmAnaMaker.h"
 
 #include "StRefMultCorr/StRefMultCorr.h"
 #include "StRefMultCorr/CentralityMaker.h"
@@ -68,15 +68,13 @@ void runPicoDpmAnaMakerPIDeff(const Char_t *inputFile="test.list", const Char_t 
        const unsigned int decayChannel = 0 /* kChannel0 */) {
   // -- Check STAR Library. Please set SL_version to the original star library used in the production
   //    from http://www.star.bnl.gov/devcgi/dbProdOptionRetrv.pl
-  string SL_version = "SL16j"; //new: SL16d -> SL16j
+  string SL_version = "SL17d"; //originally SL16j, not available any more
   string env_SL = getenv ("STAR");
   if (env_SL.find(SL_version)==string::npos) {
       cout<<"Environment Star Library does not match the requested library in runPicoHFMyAnaMaker.C. Exiting..."<<endl;
       exit(1);
   }
 
-  //Int_t nEvents = 10000000;
-  //Int_t nEvents = 1000;
 
 #ifdef __CINT__
   gROOT->LoadMacro("loadSharedHFLibraries.C");
@@ -135,12 +133,10 @@ void runPicoDpmAnaMakerPIDeff(const Char_t *inputFile="test.list", const Char_t 
   }
 
   StPicoDstMaker* picoDstMaker = new StPicoDstMaker(StPicoDstMaker::IoRead, sInputFile, "picoDstMaker"); //SL16j: See StRoot/StPicoDstMaker/StpicodstMaker.h: 28: enum PicoIoMode {IoWrite=1, IoRead=2};
-//  StPicoDstMaker* picoDstMaker = new StPicoDstMaker(2, sInputFile, "picoDstMaker"); //for local testing only
   StPicoDpmAnaMaker* picoDpmAnaMaker = new StPicoDpmAnaMaker("picoDpmAnaMaker", picoDstMaker, outputFile, sInputListHF);
   picoDpmAnaMaker->setMakerMode(makerMode);
-  picoDpmAnaMaker->setDecayChannel(StPicoDpmAnaMaker::kChannel1);//kvapil
+  picoDpmAnaMaker->setDecayChannel(StPicoDpmAnaMaker::kChannel1);
   picoDpmAnaMaker->setTreeName(treeName);
-  //picoDpmAnaMaker->setMcMode(mcMode); commented kvapil
 
   StHFCuts* hfCuts = new StHFCuts("hfBaseCuts");
   picoDpmAnaMaker->setHFBaseCuts(hfCuts);
@@ -155,19 +151,6 @@ void runPicoDpmAnaMakerPIDeff(const Char_t *inputFile="test.list", const Char_t 
 
   hfCuts->setCutVzMax(6.);
   hfCuts->setCutVzVpdVzMax(3.);
-/* SL16d triggers
-  hfCuts->addTriggerId(450050);    // vpdmb-5-p-nobsmd-hlt
-  hfCuts->addTriggerId(450060);    // vpdmb-5-p-nobsmd-hlt
-  hfCuts->addTriggerId(450005);    // vpdmb-5-p-nobsmd
-  hfCuts->addTriggerId(450015);    // vpdmb-5-p-nobsmd
-  hfCuts->addTriggerId(450025);    // vpdmb-5-p-nobsmd
-*/
-  //SL16j triggers
-  //hfCuts->addTriggerId(520802);    // VPDMB-5-p-hlt
-  //hfCuts->addTriggerId(520812);    // VPDMB-5-p-hlt
-  //hfCuts->addTriggerId(520822);    // VPDMB-5-p-hlt
-  //hfCuts->addTriggerId(520832);    // VPDMB-5-p-hlt
-  //hfCuts->addTriggerId(520842);    // VPDMB-5-p-hlt
 
   //physics stream
   hfCuts->addTriggerId(520001);    // VPDMB-5-p-sst
@@ -221,43 +204,9 @@ void runPicoDpmAnaMakerPIDeff(const Char_t *inputFile="test.list", const Char_t 
   massMin = 0.45;
   massMax = 0.55;
 
-/*
-  //phi cuts by Guannan: bool isReco =  decayLength < 5 && DCA < 0.5 && pairDCA < 0.5 && fabs(cosTheta) > 0.8 && mass > 1.0 && mass < 1.04;
-  dcaDaughtersMax = 0.5;
-
-  decayLengthMin = 0.0;
-  decayLengthMax = 5.0;
-
-  cosThetaMin = 0.8; 
-
-  //phi cuts by Luaks (see his slides on PID efficiency)
-  dcaDaughtersMax = 1.0; //from Lukas
-
-  decayLengthMin = 0.0;
-  decayLengthMax = 25.0; //from Lukas
-
-  cosThetaMin = 0.85; //from Lukas
-
-  //phi cuts - my
-  dcaDaughtersMax = 0.05; 
-
-  decayLengthMin = 0.0;
-  decayLengthMax = 5.0; 
-
-  cosThetaMin = 0.85; 
-  
-
-  massMin = 1.0;
-  massMax = 1.04;
-*/
-
   hfCuts->setCutSecondaryPair(dcaDaughtersMax, decayLengthMin, decayLengthMax, cosThetaMin, massMin, massMax);
 
   hfCuts->setCutSecondaryPairDcaToPvMax(0.5); //for K0s
-  //hfCuts->setCutSecondaryPairDcaToPvMax(1.0); //for phi - from Lukas
-//  hfCuts->setCutSecondaryPairDcaToPvMax(0.5); //for phi - from Guannan
-  //hfCuts->setCutSecondaryPairDcaToPvMax(0.05); //for phi - my
-
   
   //Single track pt
   hfCuts->setCutPtRange(0.3,50.0,StHFCuts::kPion); //used in candidates analysis
@@ -292,17 +241,13 @@ void runPicoDpmAnaMakerPIDeff(const Char_t *inputFile="test.list", const Char_t 
   //cout<<"test2"<<endl;
   // ========================================================================================
 
-  // ========================================================================================
-
-  //clock_t start = clock(); // getting starting time
   chain->Init();
   cout << "chain->Init();" << endl;
   int nEvents = picoDstMaker->chain()->GetEntries();
   cout << " Total entries = " << nEvents << endl;
-  //if(nEvents>total) nEvents = total;
 
   for (Int_t i=0; i<nEvents; i++) {
-    if(i%10==0) //orig 10000
+    if(i%10==0)
       cout << "Working on eventNumber " << i << endl;
 
     chain->Clear();
@@ -310,18 +255,14 @@ void runPicoDpmAnaMakerPIDeff(const Char_t *inputFile="test.list", const Char_t 
 
     if (iret) { cout << "Bad return code!" << iret << endl; break;}
 
-    //total++;
   }
 
   cout << "****************************************** " << endl;
   cout << "Work done... now its time to close up shop!"<< endl;
   cout << "****************************************** " << endl;
   chain->Finish();
-  //double duration = (double) (clock() - start) / (double) CLOCKS_PER_SEC;
   cout << "****************************************** " << endl;
   cout << "total number of events  " << nEvents << endl;
-  cout << "****************************************** " << endl;
- // cout << "Time needed " << duration << " s" << endl;
   cout << "****************************************** " << endl;
 
   delete chain;

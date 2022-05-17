@@ -6,15 +6,17 @@
 
 #include "StarClassLibrary/StThreeVectorF.hh"
 #include "StarClassLibrary/StLorentzVectorF.hh"
+
 #include "StPicoDstMaker/StPicoDst.h"
 #include "StPicoDstMaker/StPicoDstMaker.h"
-#include "StPicoDstMaker/StPicoEvent.h"
-#include "StPicoDstMaker/StPicoTrack.h"
-#include "StPicoDstMaker/StPicoBTofPidTraits.h"
-#include "StPicoPrescales/StPicoPrescales.h"
+
+#include "StPicoEvent/StPicoEvent.h"
+#include "StPicoEvent/StPicoTrack.h"
+#include "StPicoEvent/StPicoBTofPidTraits.h"
+//#include "StPicoPrescales/StPicoPrescales.h"
 
 #include "StHFCuts.h"
-#include "StHFHists.h"
+//#include "StHFHists.h"
 #include "StPicoHFEvent.h"
 #include "StPicoHFMaker.h"
 #include "StHFPair.h"
@@ -25,7 +27,7 @@ ClassImp(StPicoHFMaker)
 // _________________________________________________________
 StPicoHFMaker::StPicoHFMaker(char const* name, StPicoDstMaker* picoMaker, 
 			     char const* outputBaseFileName,  char const* inputHFListHFtree = "") :
-  StMaker(name), mPicoDst(NULL), mHFCuts(NULL), mHFHists(NULL), mPicoHFEvent(NULL), mBField(0.), mOutList(NULL),
+  StMaker(name), mPicoDst(NULL), mHFCuts(NULL), /*mHFHists(NULL),*/ mPicoHFEvent(NULL), mBField(0.), mOutList(NULL),
   mDecayMode(StPicoHFEvent::kTwoParticleDecay), mMakerMode(StPicoHFMaker::kAnalyze), mMcMode(false),
   mOutputTreeName("picoHFtree"), mOutputFileBaseName(outputBaseFileName), mInputFileName(inputHFListHFtree),
   mPicoDstMaker(picoMaker), mPicoEvent(NULL), mTree(NULL), mHFChain(NULL), mEventCounter(0), 
@@ -113,8 +115,8 @@ Int_t StPicoHFMaker::Init() {
   initializeEventStats();
 
   // -- initialize histogram class
-  mHFHists = new StHFHists(Form("hfHists_%s",GetName()));
-  mHFHists->init(mOutList,mDecayMode);
+  //mHFHists = new StHFHists(Form("hfHists_%s",GetName()));
+  //mHFHists->init(mOutList,mDecayMode);
 
   // -- call method of daughter class
   InitHF();
@@ -207,31 +209,27 @@ Int_t StPicoHFMaker::Make() {
   Int_t iReturn = kStOK;
 
   if (setupEvent()) {
- /*   UInt_t nTracks = mPicoDst->numberOfTracks();
+    UInt_t nTracks = mPicoDst->numberOfTracks();
 
     // -- Fill vectors of particle types
-  if(mHFCuts->HFTinputsOrPIDefficiency() == 0) //fill particle fields for HFT mathcing only
-  {
     if (mMakerMode == StPicoHFMaker::kWrite || mMakerMode == StPicoHFMaker::kAnalyze) {
       for (unsigned short iTrack = 0; iTrack < nTracks; ++iTrack) {
-	    StPicoTrack* trk = mPicoDst->track(iTrack);
-  
-      
-	    if (!trk || !mHFCuts->isGoodTrack(trk)) continue;
+	      StPicoTrack* trk = mPicoDst->track(iTrack);
 
-	    if (isPion(trk))   mIdxPicoPions.push_back(iTrack);   // isPion method to be implemented by daughter class
-	    if (isKaon(trk))   mIdxPicoKaons.push_back(iTrack);   // isKaon method to be implemented by daughter class
-	    if (isProton(trk)) mIdxPicoProtons.push_back(iTrack); // isProton method to be implemented by daughter class
+        if (!trk || !mHFCuts->isGoodTrack(trk)) continue;
+
+        if (isPion(trk))   mIdxPicoPions.push_back(iTrack);   // isPion method to be implemented by daughter class
+        if (isKaon(trk))   mIdxPicoKaons.push_back(iTrack);   // isKaon method to be implemented by daughter class
+        if (isProton(trk)) mIdxPicoProtons.push_back(iTrack); // isProton method to be implemented by daughter class
       
       } // .. end tracks loop
     } // if (mMakerMode == StPicoHFMaker::kWrite || mMakerMode == StPicoHFMaker::kAnalyze) {
-  }
-*/
+
     // -- call method of daughter class
     iReturn = MakeHF();
 
     // -- fill basic event histograms - for good events
-    mHFHists->fillGoodEventHists(*mPicoEvent, *mPicoHFEvent);
+    //mHFHists->fillGoodEventHists(*mPicoEvent, *mPicoHFEvent);
 
   } // if (setupEvent()) {
   
@@ -240,7 +238,7 @@ Int_t StPicoHFMaker::Make() {
     mTree->Fill();
   
   // -- fill basic event histograms - for all events
-  mHFHists->fillEventHists(*mPicoEvent, *mPicoHFEvent);
+  //mHFHists->fillEventHists(*mPicoEvent, *mPicoHFEvent);
 
   // -- reset event to be in a defined state
   resetEvent();
@@ -278,7 +276,7 @@ void StPicoHFMaker::createTertiaryK0Shorts() {
       mPicoHFEvent->addHFTertiaryVertexPair(&candidateK0Short);
 
       // -- fill tertiary pair histograms
-      mHFHists->fillTertiaryPairHists(&candidateK0Short, kTRUE);
+      //mHFHists->fillTertiaryPairHists(&candidateK0Short, kTRUE);
     }
   }
 }
@@ -313,7 +311,7 @@ void StPicoHFMaker::createTertiaryLambdas() {
       mPicoHFEvent->addHFTertiaryVertexPair(&lambda);
 
       // -- fill tertiary pair histograms
-      mHFHists->fillTertiaryPairHists(&lambda, kTRUE);
+      //mHFHists->fillTertiaryPairHists(&lambda, kTRUE);
     }
   }
 }

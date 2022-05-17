@@ -5,7 +5,7 @@
 sed -n '100001,125618 p' ./picoLists/picoList_all_new_sst_stream.list > picoList_test_sst.list
 
 #compile run macro locally and copy the compiled version (all files) in xml to scratch
-starver SL16j
+starver SL17d
 root -q -b -l compileRunMacroLocally.C
 
 path=`pwd -P`

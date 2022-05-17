@@ -5,7 +5,7 @@
 
 #include "StarClassLibrary/StPhysicalHelixD.hh"
 #include "StarClassLibrary/SystemOfUnits.h"
-#include "StPicoDstMaker/StPicoTrack.h"
+#include "StPicoEvent/StPicoTrack.h"
 
 ClassImp(StHFQuadruplet)
 
@@ -281,7 +281,6 @@ StHFQuadruplet::StHFQuadruplet(StPicoTrack const * const particle1, StPicoTrack 
   StPhysicalHelixD const p1StraightLine(p1Mom, particle1->origin(), 0, particle1->charge());
   StPhysicalHelixD const p2StraightLine(p2Mom, particle2->origin(), 0, particle2->charge());
   StPhysicalHelixD const p3StraightLine(p3Mom, particle3->origin(), 0, particle3->charge());
-
 //-----------------------------------------------------------------------------------------
   
   pair<double, double> const ss12 = p1StraightLine.pathLengths(p2StraightLine);

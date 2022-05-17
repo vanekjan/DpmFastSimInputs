@@ -40,15 +40,13 @@
 #include "StPicoHFMaker/StPicoHFEvent.h"
 #include "StPicoHFMaker/StHFCuts.h"
 
-//#include "StPicoHFMyAnaMaker/StPicoHFMyAnaMaker.h"
-
 #include "macros/loadSharedHFLibraries.C"
 
 #include <iostream>
 #include <ctime>
 #include <cstdio>
 
-#include "StPicoDpmAnaMaker/StPicoDpmAnaMaker.h" //kvapil
+#include "StPicoDpmAnaMaker/StPicoDpmAnaMaker.h"
 
 #include "StRefMultCorr/StRefMultCorr.h"
 #include "StRefMultCorr/CentralityMaker.h"
@@ -68,15 +66,12 @@ void runPicoDpmAnaMakerHFT(const Char_t *inputFile="test.list", const Char_t *ou
     const unsigned int decayChannel = 0 /* kChannel0 */) {
   // -- Check STAR Library. Please set SL_version to the original star library used in the production
   //    from http://www.star.bnl.gov/devcgi/dbProdOptionRetrv.pl
-  string SL_version = "SL16j"; //new: SL16d -> SL16j
+  string SL_version = "SL17d"; //originally SL16j, not available any more
   string env_SL = getenv ("STAR");
   if (env_SL.find(SL_version)==string::npos) {
     cout<<"Environment Star Library does not match the requested library in runPicoHFMyAnaMaker.C. Exiting..."<<endl;
     exit(1);
   }
-
-  //Int_t nEvents = 10000000;
-  //Int_t nEvents = 1000;
 
 #ifdef __CINT__
   gROOT->LoadMacro("loadSharedHFLibraries.C");
@@ -135,12 +130,10 @@ void runPicoDpmAnaMakerHFT(const Char_t *inputFile="test.list", const Char_t *ou
   }
 
   StPicoDstMaker* picoDstMaker = new StPicoDstMaker(StPicoDstMaker::IoRead, sInputFile, "picoDstMaker"); //SL16j: See StRoot/StPicoDstMaker/StpicodstMaker.h: 28: enum PicoIoMode {IoWrite=1, IoRead=2};
-  //  StPicoDstMaker* picoDstMaker = new StPicoDstMaker(2, sInputFile, "picoDstMaker"); //for local testing only
   StPicoDpmAnaMaker* picoDpmAnaMaker = new StPicoDpmAnaMaker("picoDpmAnaMaker", picoDstMaker, outputFile, sInputListHF);
   picoDpmAnaMaker->setMakerMode(makerMode);
-  picoDpmAnaMaker->setDecayChannel(StPicoDpmAnaMaker::kChannel1);//kvapil
+  picoDpmAnaMaker->setDecayChannel(StPicoDpmAnaMaker::kChannel1);
   picoDpmAnaMaker->setTreeName(treeName);
-  //picoDpmAnaMaker->setMcMode(mcMode); commented kvapil
 
   StHFCuts* hfCuts = new StHFCuts("hfBaseCuts");
   picoDpmAnaMaker->setHFBaseCuts(hfCuts);
@@ -167,11 +160,10 @@ void runPicoDpmAnaMakerHFT(const Char_t *inputFile="test.list", const Char_t *ou
   hfCuts->addTriggerId(570002);    // VPDMB-5-nosst (production 2, nosst stream)
   hfCuts->addTriggerId(570001);    // VPDMB-5-sst (production 2, sst stream )
 
-  hfCuts->setHFTinputsOrPIDefficiency(0); //0 - HFT inputs; 1 - PID efficiency; 2 - tracking efficiency sys. err.
+  hfCuts->setHFTinputsOrPIDefficiency(0); //0 - fast-sim inputs; 1 - PID efficiency; 2 - tracking efficiency sys. err.
 
   hfCuts->setHFTratiosOrDCAdistributions(1); //0 - DCA distributions for FastSim, 1 - HFT ratios for FastSim
 
-  //hfCuts->setCutNHitsFitMin(15); //kvapil 20 to 15, for candidates
   hfCuts->setCutNHitsFitMinHist(20); //for histograms, Vanek
   hfCuts->setCutRequireHFT(true);
 
@@ -180,16 +172,12 @@ void runPicoDpmAnaMakerHFT(const Char_t *inputFile="test.list", const Char_t *ou
   hfCuts->setCutDcaXy(1.0); 
   hfCuts->setCutDcaZ(1.0);
 
-  //hfCuts->setCutDcaMin(0.006,StHFCuts::kPion); 
-  //hfCuts->setCutDcaMin(0.006,StHFCuts::kKaon); 
-
   hfCuts->setCutNHitsFitnHitsMax(0.52);
 
   // ---------------------------------------------------
 
   // -- Channel0
-  //picoHFMyAnaMaker->setDecayMode(StPicoHFEvent::kTwoParticleDecay);
-  picoDpmAnaMaker->setDecayMode(StPicoHFEvent::kThreeParticleDecay); //kvapil
+  picoDpmAnaMaker->setDecayMode(StPicoHFEvent::kThreeParticleDecay);
 
   // -- ADD USER CUTS HERE ----------------------------
 
@@ -201,11 +189,10 @@ void runPicoDpmAnaMakerHFT(const Char_t *inputFile="test.list", const Char_t *ou
   hfCuts->setCutPtRange(0.3,50.0,StHFCuts::kKaon); //changed to 0.3
 
   hfCuts->setCutPtQA(0.3); //p_T used in createQA() in StPicoDpmAnaMaker.cxx
-  //hfCuts->setCutPtRangeQA(0.5, 4.0); //pT range for PID efficiency
+
   //TPC setters
   hfCuts->setCutTPCNSigmaPion(3.0); //same as in analysis
   hfCuts->setCutTPCNSigmaKaon(2.0); //same as in analysis
-  //hfCuts->setCutTPCNSigmaProton(1.0); //for FastSim inputs
 
   //TOF setters, need to set pt range as well
   hfCuts->setCutTOFDeltaOneOverBeta(0.03, StHFCuts::kKaon); //changed to 0.03 (same cut as used in analysis)
@@ -213,30 +200,19 @@ void runPicoDpmAnaMakerHFT(const Char_t *inputFile="test.list", const Char_t *ou
   hfCuts->setCutTOFDeltaOneOverBeta(0.03, StHFCuts::kPion); //changed to 0.03 (same cut as used in analysis)
   hfCuts->setCutPtotRangeHybridTOF(0.3,50.0,StHFCuts::kPion); //changed lower boundary from 0.5 to 0.3 (same cut as used in analysis)
 
-
-  //pion and kaon pair cuts
-  //hfCuts->setCutPiPairInvMassInterval(0.4, 0.6); //inv. mass interval for K0s -> pi+pi
-  //hfCuts->setCutKPairInvMassInterval(1.0, 1.04 ); //inv. mass interval for phi -> K+K
-
-
   // set refmultCorr
-  //  cout<<"test"<<endl;
   StRefMultCorr* grefmultCorrUtil = CentralityMaker::instance()->getgRefMultCorr_P16id(); //new StRefMultCorr, info about Run16, SL16j in the same file as for Run14, SL16d
   picoDpmAnaMaker->setRefMutCorr(grefmultCorrUtil);
-  //cout<<"test2"<<endl;
   // ========================================================================================
 
-  // ========================================================================================
 
-  //clock_t start = clock(); // getting starting time
   chain->Init();
   cout << "chain->Init();" << endl;
   int nEvents = picoDstMaker->chain()->GetEntries();
   cout << " Total entries = " << nEvents << endl;
-  //if(nEvents>total) nEvents = total;
 
   for (Int_t i=0; i<nEvents; i++) {
-    if(i%100000==0) //orig 10000
+    if(i%100000==0)
       cout << "Working on eventNumber " << i << endl;
 
     chain->Clear();
@@ -244,18 +220,14 @@ void runPicoDpmAnaMakerHFT(const Char_t *inputFile="test.list", const Char_t *ou
 
     if (iret) { cout << "Bad return code!" << iret << endl; break;}
 
-    //total++;
   }
 
   cout << "****************************************** " << endl;
   cout << "Work done... now its time to close up shop!"<< endl;
   cout << "****************************************** " << endl;
   chain->Finish();
-  //double duration = (double) (clock() - start) / (double) CLOCKS_PER_SEC;
   cout << "****************************************** " << endl;
   cout << "total number of events  " << nEvents << endl;
-  cout << "****************************************** " << endl;
-  // cout << "Time needed " << duration << " s" << endl;
   cout << "****************************************** " << endl;
 
   delete chain;

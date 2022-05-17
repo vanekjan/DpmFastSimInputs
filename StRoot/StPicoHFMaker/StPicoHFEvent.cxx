@@ -1,4 +1,4 @@
-#include "StPicoDstMaker/StPicoEvent.h"
+#include "StPicoEvent/StPicoEvent.h"
 
 #include "StPicoHFEvent.h"
 #include "StHFPair.h"

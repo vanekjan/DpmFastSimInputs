@@ -48,7 +48,7 @@
 #include <ctime>
 #include <cstdio>
 
-#include "StPicoDpmAnaMaker/StPicoDpmAnaMaker.h" //kvapil
+#include "StPicoDpmAnaMaker/StPicoDpmAnaMaker.h"
 
 #include "StRefMultCorr/StRefMultCorr.h"
 #include "StRefMultCorr/CentralityMaker.h"
@@ -68,15 +68,12 @@ void runPicoDpmAnaMakerTrackEffErr(const Char_t *inputFile="test.list", const Ch
 			 const unsigned int decayChannel = 0 /* kChannel0 */) {
   // -- Check STAR Library. Please set SL_version to the original star library used in the production
   //    from http://www.star.bnl.gov/devcgi/dbProdOptionRetrv.pl
-  string SL_version = "SL16j"; //new: SL16d -> SL16j
+  string SL_version = "SL17d"; //originally SL16j, not available any more
   string env_SL = getenv ("STAR");
   if (env_SL.find(SL_version)==string::npos) {
       cout<<"Environment Star Library does not match the requested library in runPicoHFMyAnaMaker.C. Exiting..."<<endl;
       exit(1);
   }
-
-  //Int_t nEvents = 10000000;
-  //Int_t nEvents = 1000;
 
 #ifdef __CINT__
   gROOT->LoadMacro("loadSharedHFLibraries.C");
@@ -135,12 +132,10 @@ void runPicoDpmAnaMakerTrackEffErr(const Char_t *inputFile="test.list", const Ch
   }
 
   StPicoDstMaker* picoDstMaker = new StPicoDstMaker(StPicoDstMaker::IoRead, sInputFile, "picoDstMaker"); //SL16j: See StRoot/StPicoDstMaker/StpicodstMaker.h: 28: enum PicoIoMode {IoWrite=1, IoRead=2};
-//  StPicoDstMaker* picoDstMaker = new StPicoDstMaker(2, sInputFile, "picoDstMaker"); //for local testing only
   StPicoDpmAnaMaker* picoDpmAnaMaker = new StPicoDpmAnaMaker("picoDpmAnaMaker", picoDstMaker, outputFile, sInputListHF);
   picoDpmAnaMaker->setMakerMode(makerMode);
-  picoDpmAnaMaker->setDecayChannel(StPicoDpmAnaMaker::kChannel1);//kvapil
+  picoDpmAnaMaker->setDecayChannel(StPicoDpmAnaMaker::kChannel1);
   picoDpmAnaMaker->setTreeName(treeName);
-  //picoDpmAnaMaker->setMcMode(mcMode); commented kvapil
 
   StHFCuts* hfCuts = new StHFCuts("hfBaseCuts");
   picoDpmAnaMaker->setHFBaseCuts(hfCuts);
@@ -155,13 +150,7 @@ void runPicoDpmAnaMakerTrackEffErr(const Char_t *inputFile="test.list", const Ch
 
   hfCuts->setCutVzMax(6.);
   hfCuts->setCutVzVpdVzMax(3.);
-/* SL16d triggers
-  hfCuts->addTriggerId(450050);    // vpdmb-5-p-nobsmd-hlt
-  hfCuts->addTriggerId(450060);    // vpdmb-5-p-nobsmd-hlt
-  hfCuts->addTriggerId(450005);    // vpdmb-5-p-nobsmd
-  hfCuts->addTriggerId(450015);    // vpdmb-5-p-nobsmd
-  hfCuts->addTriggerId(450025);    // vpdmb-5-p-nobsmd
-*/
+
 	//SL16j triggers
   hfCuts->addTriggerId(520802);    // VPDMB-5-p-hlt
   hfCuts->addTriggerId(520812);    // VPDMB-5-p-hlt
@@ -191,8 +180,7 @@ void runPicoDpmAnaMakerTrackEffErr(const Char_t *inputFile="test.list", const Ch
   // ---------------------------------------------------
 
   // -- Channel0
-  //picoHFMyAnaMaker->setDecayMode(StPicoHFEvent::kTwoParticleDecay);
-  picoDpmAnaMaker->setDecayMode(StPicoHFEvent::kThreeParticleDecay); //kvapil
+  picoDpmAnaMaker->setDecayMode(StPicoHFEvent::kThreeParticleDecay);
 
   // -- ADD USER CUTS HERE ----------------------------
 
@@ -202,7 +190,7 @@ void runPicoDpmAnaMakerTrackEffErr(const Char_t *inputFile="test.list", const Ch
 	
   //Single track pt
   hfCuts->setCutPtRange(0.3,50.0,StHFCuts::kPion); //used in candidates analysis
-  hfCuts->setCutPtRange(0.3,50.0,StHFCuts::kKaon); //changed to 0.3
+  hfCuts->setCutPtRange(0.3,50.0,StHFCuts::kKaon);
 
 	hfCuts->setCutPtQA(0.3); //p_T used in createQA() for HFT efficiency
   hfCuts->setCutPtRangeQA(0.2, 4.0); //pT range for PID efficiency and tracking efficiency systematic error
@@ -210,20 +198,14 @@ void runPicoDpmAnaMakerTrackEffErr(const Char_t *inputFile="test.list", const Ch
   
 
   // set refmultCorr
-//  cout<<"test"<<endl;
   StRefMultCorr* grefmultCorrUtil = CentralityMaker::instance()->getgRefMultCorr_P16id(); //new StRefMultCorr, info about Run16, SL16j in the same file as for Run14, SL16d
   picoDpmAnaMaker->setRefMutCorr(grefmultCorrUtil);
-  //cout<<"test2"<<endl;
   // ========================================================================================
 
-  // ========================================================================================
-
-  //clock_t start = clock(); // getting starting time
   chain->Init();
   cout << "chain->Init();" << endl;
   int nEvents = picoDstMaker->chain()->GetEntries();
   cout << " Total entries = " << nEvents << endl;
-  //if(nEvents>total) nEvents = total;
 
   for (Int_t i=0; i<nEvents; i++) {
     if(i%100==0) //orig 10000
@@ -241,11 +223,8 @@ void runPicoDpmAnaMakerTrackEffErr(const Char_t *inputFile="test.list", const Ch
   cout << "Work done... now its time to close up shop!"<< endl;
   cout << "****************************************** " << endl;
   chain->Finish();
-  //double duration = (double) (clock() - start) / (double) CLOCKS_PER_SEC;
   cout << "****************************************** " << endl;
   cout << "total number of events  " << nEvents << endl;
-  cout << "****************************************** " << endl;
- // cout << "Time needed " << duration << " s" << endl;
   cout << "****************************************** " << endl;
 
   delete chain;
