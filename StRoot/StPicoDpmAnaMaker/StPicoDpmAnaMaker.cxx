@@ -124,7 +124,7 @@ int StPicoDpmAnaMaker::FinishHF() {
       closeFile(); // for HFT inputs
     }   
 
-    if(mHFCuts->HFTinputsOrPIDefficiency() == 2) //tracking efficiency systematic error
+    if(mHFCuts->HFTinputsOrPIDefficiency() == 2) 
     {
       K_PID_eff->Write(); //for kaon TPC and TOF PID efficiency
     }    
