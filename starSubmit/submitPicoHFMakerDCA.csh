@@ -22,7 +22,7 @@
 # ###############################################
 
 # -- set STAR software version
-starver SL16j
+starver SL17d
 
 # -- baseFolder of job
 set baseFolder=${1}
@@ -59,7 +59,7 @@ set treeName=MyAna.picoHFtree
 set productionId=`date +%F_%H-%M`
 
 # -- set STAR software version
-set starVersion=SL16j
+set starVersion=SL17d
 
 # -- production base path (to find picoDsts to corresponding trees
 #set productionbasePath=/star/data100/reco/AuAu_200_production_2016/ReversedFullField/P16ij/2016

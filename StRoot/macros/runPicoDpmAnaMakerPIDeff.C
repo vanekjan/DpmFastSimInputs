@@ -40,7 +40,7 @@
 #include "StPicoHFMaker/StPicoHFEvent.h"
 #include "StPicoHFMaker/StHFCuts.h"
 
-#include "StPicoHFMyAnaMaker/StPicoHFMyAnaMaker.h"
+//#include "StPicoHFMyAnaMaker/StPicoHFMyAnaMaker.h"
 
 #include "macros/loadSharedHFLibraries.C"
 

@@ -2,7 +2,7 @@
 #include "TROOT.h"
 #include "TSystem.h"
 
-void compileRunMacroLocally(const char* name = "runPicoDpmAnaMakerHFT.C"){ //orig. runPicoHFMyAnaMaker.C
+void compileRunMacroLocallyHFT(const char* name = "runPicoDpmAnaMakerHFT.C"){ //orig. runPicoHFMyAnaMaker.C
   Long_t ret = gROOT->ProcessLine(".L StRoot/macros/loadSharedHFLibraries.C");
   cout << ret << endl;
   loadSharedHFLibraries();

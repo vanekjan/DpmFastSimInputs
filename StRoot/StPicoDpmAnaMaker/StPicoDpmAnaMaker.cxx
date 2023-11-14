@@ -100,6 +100,23 @@ int StPicoDpmAnaMaker::InitHF() {
     K_PID_eff->Branch("KPairCharge", &KPairCharge, "KPairCharge/I");
 
   }
+  
+  if(mHFCuts->HFTinputsOrPIDefficiency() == 3) //tracking efficiency systematic error
+  {
+    TrackEffErr = new TTree("TrackEffErr", "TrackEffErr");
+
+    TrackEffErr->Branch("Track_pt", &Track_pt, "Track_pt/F");
+    TrackEffErr->Branch("Track_nHitsFit", &Track_nHitsFit, "Track_nHitsFit/F");
+    TrackEffErr->Branch("Track_nHitsMax", &Track_nHitsMax, "Track_nHitsMax/F");
+    TrackEffErr->Branch("Track_nSigmaTPCPi", &Track_nSigmaTPCPi, "Track_nSigmaTPCPi/F");
+    TrackEffErr->Branch("Track_nSigmaTOFPi", &Track_nSigmaTOFPi, "Track_nSigmaTOFPi/F");
+    TrackEffErr->Branch("Track_nSigmaTPCK", &Track_nSigmaTPCK, "Track_nSigmaTPCK/F");
+    TrackEffErr->Branch("Track_nSigmaTOFK", &Track_nSigmaTOFK, "Track_nSigmaTOFK/F");
+    TrackEffErr->Branch("Track_isHFT", &Track_isHFT, "Track_isHFT/I");
+    TrackEffErr->Branch("Track_centrality", &Track_centrality, "Track_centrality/I");
+    TrackEffErr->Branch("Track_reweight", &Track_reweight, "Track_reweight/F");
+
+  }
 
   mRunNumber = 0;
   return kStOK;
@@ -128,6 +145,11 @@ int StPicoDpmAnaMaker::FinishHF() {
     {
       K_PID_eff->Write(); //for kaon TPC and TOF PID efficiency
     }    
+    
+    if(mHFCuts->HFTinputsOrPIDefficiency() == 3) 
+    {
+      TrackEffErr->Write(); //write track. eff. sys. err. tree
+    }
 
   return kStOK;
 }
@@ -165,6 +187,11 @@ int StPicoDpmAnaMaker::MakeHF() {
     if(mHFCuts->HFTinputsOrPIDefficiency() == 2) 
     {
       createCandidates(); //for TPC and TOF kaon PID efficiency
+    }
+    
+    if(mHFCuts->HFTinputsOrPIDefficiency() == 3) 
+    {
+      FillTrackEffErrData(); //for tracking efficiency systematic error - input from data
     }
     
   }
@@ -477,6 +504,90 @@ int StPicoDpmAnaMaker::analyzeCandidates() { //for pure pi samples for TPC and T
   
 
  return kStOK;
+}
+
+int StPicoDpmAnaMaker::FillTrackEffErrData()
+{
+  mRefmultCorrUtil->init(mPicoDst->event()->runId());
+  if (!mRefmultCorrUtil){
+     LOG_WARN << " No mGRefMultCorrUtil! Skip! " << endl;
+     return kStWarn;
+  }
+  if (mRefmultCorrUtil->isBadRun(mPicoDst->event()->runId())) return kStOK;
+
+  mRefmultCorrUtil->initEvent(mPicoDst->event()->grefMult(), mPrimVtx.z(), mPicoDst->event()->ZDCx()) ;
+
+  int const centrality = mRefmultCorrUtil->getCentralityBin9();
+  const double reweight = mRefmultCorrUtil->getWeight();
+  //const double refmultCor = mRefmultCorrUtil->getRefMultCorr(); 
+
+  UInt_t nTracks = mPicoDst->numberOfTracks();
+
+  for (unsigned int iTrack = 0; iTrack < nTracks; iTrack++)
+  {
+    StPicoTrack const* trk = mPicoDst->track(iTrack);
+    if (!trk) continue;
+    
+    StPhysicalHelixD helix = trk->helix(mPicoDst->event()->bField()); //SL16j, Vanek
+    //float dca = float(helix.geometricSignedDistance(mPrimVtx));
+    
+    //StThreeVectorF momentum = trk->gMom(mPrimVtx, mPicoDst->event()->bField());
+    //StThreeVectorF momentum = trk->gMom(trk->origin(), mPicoDst->event()->bField());
+    StThreeVectorF momentum = trk->gMom();
+
+    double dcaXy = helix.geometricSignedDistance(mPrimVtx.x(), mPrimVtx.y());    
+
+    
+    if(!(mHFCuts->hasGoodPtRangeQA(trk))) continue;
+    if (!(mHFCuts->hasGoodEta(trk->gMom()))) continue;
+    //if( fabs(dca) > mHFCuts->cutDca() ) continue;
+    if( fabs(dcaXy) > mHFCuts->cutDcaXy()  ) continue;
+
+
+    Track_pt = trk->gPt();
+
+    Track_nHitsFit = trk->nHitsFit();
+    Track_nHitsMax = trk->nHitsMax();
+
+    Track_nSigmaTPCPi = trk->nSigmaPion();
+    Track_nSigmaTPCK = trk->nSigmaKaon();
+
+    float hBeta = mHFCuts->getTofBetaBase(trk, mPicoDst->event()->bField()); //SL16j, Vanek
+    bool hTofAvailable = !isnan(hBeta) && hBeta > 0;
+
+    if(hTofAvailable)
+    {
+
+      Track_nSigmaTOFPi = 1./hBeta - sqrt(1+M_PION_PLUS*M_PION_PLUS/(momentum.mag()*momentum.mag()));
+      Track_nSigmaTOFK = 1./hBeta - sqrt(1+M_KAON_PLUS*M_KAON_PLUS/(momentum.mag()*momentum.mag()));
+
+    }
+    else
+    {
+      Track_nSigmaTOFPi = -100;
+      Track_nSigmaTOFK = -100;
+    }
+   
+
+    if(!(trk->isHFTTrack()))
+    {
+      Track_isHFT = 1;
+    }
+    else
+    {
+      Track_isHFT = 0;
+    }
+
+    Track_centrality = centrality;
+
+    Track_reweight = reweight;
+
+
+    TrackEffErr->Fill();   
+
+  }
+
+  return kStOK;
 }
 
 // _________________________________________________________

@@ -144,6 +144,7 @@ class StPicoDpmAnaMaker : public StPicoHFMaker
 private:
   int createCandidates();
   int analyzeCandidates();
+  int FillTrackEffErrData();
 
 
 
